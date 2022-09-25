@@ -1,5 +1,6 @@
 import { Box, VStack } from "@chakra-ui/react";
 import { ReactNode } from "react";
+import Navbar from "../navbar";
 
 type Layout = {
   children: ReactNode | ReactNode[];
@@ -12,6 +13,7 @@ const BaseLayout = ({ children }: Layout) => (
     justifyContent="center"
     userSelect="none"
   >
+    <Navbar />
     {children}
   </VStack>
 );
