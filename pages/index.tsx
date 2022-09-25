@@ -14,7 +14,7 @@ const Home: NextPage = () => {
         Un hogar para tus resúmenes
       </Heading>
 
-      <Link href="/directory">
+      <Link href="/resumenes">
         <Button>Resumenes</Button>
       </Link>
     </BaseLayout>

@@ -11,7 +11,10 @@ const Navbar = () => {
     <HStack position="fixed" top={0} padding={4}>
       <Text fontSize="2xl">Resumilo</Text>
       {user ? (
-        <Button colorScheme="red" onClick={() => signOut(auth)}>
+        <Button
+          colorScheme="red"
+          onClick={() => signOut(auth).then(() => window.location.reload())}
+        >
           Cerrar sesión
         </Button>
       ) : (
