@@ -72,7 +72,7 @@ const Create = () => {
               mercado_pago: data.mercado_pago ?? "",
             },
             file_reference: snapshot.ref.name,
-            date: format(new Date(), "yyyy-mm-dd"),
+            date: format(new Date(), "yyyy-MM-dd"),
           };
 
           setDoc(doc(collection(firestore, "resumenes")), newResumen)
