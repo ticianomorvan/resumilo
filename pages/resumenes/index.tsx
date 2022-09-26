@@ -1,9 +1,8 @@
+import { Resumen } from "../../types/resumen";
 import { GetServerSideProps, NextPage } from "next";
-import { useEffect, useState } from "react";
+import { getAllResumenes } from "../../lib/firestore";
 import BaseLayout from "../../components/layouts/BaseLayout";
 import ResumenItem from "../../components/resumen_item";
-import { getAllResumenes } from "../../lib/firestore";
-import { Resumen } from "../../types/resumen";
 
 const Index: NextPage<{ resumenes: Resumen[] }> = ({
   resumenes,
