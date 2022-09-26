@@ -1,8 +1,7 @@
 import { Resumen } from "../../types/resumen";
 import { GetServerSideProps, NextPage } from "next";
-import { getAllResumenes } from "../../lib/firestore";
+import { getAllResumenes } from "../../lib/utils";
 import BaseLayout from "../../components/layouts/BaseLayout";
-import ResumenItem from "../../components/resumen_item";
 
 const Index: NextPage<{ resumenes: Resumen[] }> = ({
   resumenes,
@@ -10,24 +9,16 @@ const Index: NextPage<{ resumenes: Resumen[] }> = ({
   resumenes: Resumen[];
 }) => {
   return (
-    <BaseLayout>
+    <BaseLayout title="Resúmenes | Resumilo">
       {resumenes.map((resumen) => (
-        <ResumenItem
-          key={resumen.title}
-          title={resumen.title}
-          date={resumen.date}
-          topic={resumen.topic}
-          author={resumen.author}
-        />
+        <p key={resumen.title}>{resumen.title}</p>
       ))}
     </BaseLayout>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const resumenes = (await getAllResumenes()).docs.map(
-    (document) => document.data() as Resumen
-  );
+  const resumenes = await getAllResumenes();
 
   return {
     props: {

@@ -1,21 +1,22 @@
 import * as Yup from "yup";
+import { format } from "date-fns";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ref, uploadBytes } from "firebase/storage";
-import { storage } from "../lib/storage";
+import { uploadBytes } from "firebase/storage";
+import { Resumen } from "../types/resumen";
+import { useAuth } from "../hooks/useAuth";
+import { createResumenDoc, createResumenRef } from "../lib/utils";
+
+// Components
+import BaseLayout from "../components/layouts/BaseLayout";
 import {
   Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Input,
+  useToast,
 } from "@chakra-ui/react";
-import { Resumen } from "../types/resumen";
-import { format } from "date-fns";
-import { useAuth } from "../hooks/useAuth";
-import { collection, doc, setDoc } from "firebase/firestore";
-import { firestore } from "../lib/firestore";
-import BaseLayout from "../components/layouts/BaseLayout";
 
 const TEN_MEGABYTES_LIMIT = 10000000; // 10 MB to Byte conversion
 
@@ -46,18 +47,26 @@ const Create = () => {
   } = useForm<Inputs>({ resolver: yupResolver(validationSchema) });
 
   const { user } = useAuth();
+  const toast = useToast();
 
   if (!user) return <p>Cargando...</p>;
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    const resumenDocument = data.file.item(0)!;
+    const resumenDocument = data.file.item(0); // Get the selected file from the input.
 
-    console.log(resumenDocument.size);
+    if (!resumenDocument) {
+      return toast({
+        title: "No elegiste ningún archivo para subir.",
+        description: "Tip: ¡Puedes subir archivos .pdf o .docx de hasta 10 MB!",
+        status: "info",
+        isClosable: true,
+      });
+    }
 
     if (resumenDocument.size > TEN_MEGABYTES_LIMIT)
       return alert("El archivo tiene que ser inferior a 10 MB.");
 
-    const storageRef = ref(storage, `resumenes/${resumenDocument.name}`);
+    const storageRef = createResumenRef(resumenDocument);
 
     uploadBytes(storageRef, resumenDocument)
       .then((snapshot) => {
@@ -66,33 +75,48 @@ const Create = () => {
             title: data.title,
             description: data.description,
             topic: data.topic,
-            author: {
-              name: user.displayName ?? "",
-              avatar: user.photoURL ?? "",
-              mercado_pago: data.mercado_pago ?? "",
-            },
+            author_id: user.uid,
             file_reference: snapshot.ref.name,
             date: format(new Date(), "yyyy-MM-dd"),
           };
 
-          setDoc(doc(collection(firestore, "resumenes")), newResumen)
-            .then(() => alert("Document created"))
-            .catch((error) => alert(error));
+          createResumenDoc(newResumen)
+            .then(() =>
+              toast({
+                title: "¡Tu resumen se subió correctamente!",
+                status: "success",
+                duration: 2000,
+              })
+            )
+            .catch((error) =>
+              toast({
+                title: "Hubo un problema",
+                description: error,
+                status: "error",
+                isClosable: true,
+              })
+            );
 
           reset({
             title: "",
             description: "",
             topic: "",
-            file: undefined,
             mercado_pago: "",
           });
         }
       })
-      .catch((error) => alert(error));
+      .catch((error) =>
+        toast({
+          title: "Hubo un problema",
+          description: error,
+          status: "error",
+          isClosable: true,
+        })
+      );
   };
 
   return (
-    <BaseLayout>
+    <BaseLayout title="Creación | Resumilo">
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={Boolean(errors.title)}>
           <FormLabel htmlFor="title">Título</FormLabel>

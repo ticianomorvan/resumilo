@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const Home: NextPage = () => {
   return (
-    <BaseLayout>
+    <BaseLayout title="Resumilo">
       <Heading as="h1" fontSize="8xl">
         Resumilo
       </Heading>
