@@ -3,9 +3,9 @@ import { format } from "date-fns";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { uploadBytes } from "firebase/storage";
-import { Resumen } from "../types/resumen";
-import { useAuth } from "../hooks/useAuth";
-import { createResumenDoc, createResumenRef } from "../lib/utils";
+import { Summary } from "../types/summary";
+import { errorToast } from "../lib/utils";
+import { nanoid } from "nanoid";
 
 // Components
 import BaseLayout from "../components/layouts/BaseLayout";
@@ -17,6 +17,7 @@ import {
   Input,
   useToast,
 } from "@chakra-ui/react";
+import { useUser } from "../context/user_context";
 
 const TEN_MEGABYTES_LIMIT = 10000000; // 10 MB to Byte conversion
 
@@ -31,10 +32,10 @@ const validationSchema = Yup.object().shape({
 });
 
 interface Inputs {
+  id: string;
   title: string;
   description: string;
   topic: string;
-  mercado_pago: string;
   file: FileList;
 }
 
@@ -46,12 +47,12 @@ const Create = () => {
     reset,
   } = useForm<Inputs>({ resolver: yupResolver(validationSchema) });
 
-  const { user } = useAuth();
+  const { user } = useUser();
   const toast = useToast();
 
   if (!user) return <p>Cargando...</p>;
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const resumenDocument = data.file.item(0); // Get the selected file from the input.
 
     if (!resumenDocument) {
@@ -66,12 +67,17 @@ const Create = () => {
     if (resumenDocument.size > TEN_MEGABYTES_LIMIT)
       return alert("El archivo tiene que ser inferior a 10 MB.");
 
-    const storageRef = createResumenRef(resumenDocument);
+    const { firebase, createSummaryRef, createSummaryDoc } = await import(
+      "../lib/firebase"
+    );
+
+    const storageRef = createSummaryRef(firebase, resumenDocument);
 
     uploadBytes(storageRef, resumenDocument)
       .then((snapshot) => {
         if (snapshot) {
-          const newResumen: Resumen = {
+          const newSummary: Summary = {
+            id: nanoid(),
             title: data.title,
             description: data.description,
             topic: data.topic,
@@ -80,7 +86,7 @@ const Create = () => {
             date: format(new Date(), "yyyy-MM-dd"),
           };
 
-          createResumenDoc(newResumen)
+          createSummaryDoc(firebase, newSummary)
             .then(() =>
               toast({
                 title: "¡Tu resumen se subió correctamente!",
@@ -88,31 +94,16 @@ const Create = () => {
                 duration: 2000,
               })
             )
-            .catch((error) =>
-              toast({
-                title: "Hubo un problema",
-                description: error,
-                status: "error",
-                isClosable: true,
-              })
-            );
+            .catch((error) => toast(errorToast(error)));
 
           reset({
             title: "",
             description: "",
             topic: "",
-            mercado_pago: "",
           });
         }
       })
-      .catch((error) =>
-        toast({
-          title: "Hubo un problema",
-          description: error,
-          status: "error",
-          isClosable: true,
-        })
-      );
+      .catch((error) => toast(errorToast(error)));
   };
 
   return (
@@ -156,17 +147,6 @@ const Create = () => {
 
           <FormErrorMessage>
             {errors.file && <p>{errors.file.message}</p>}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={Boolean(errors.mercado_pago)}>
-          <FormLabel htmlFor="mercado_pago">
-            Link de pago (Mercado Pago)
-          </FormLabel>
-          <Input id="mercado_pago" {...register("mercado_pago")} />
-
-          <FormErrorMessage>
-            {errors.mercado_pago && <p>{errors.mercado_pago.message}</p>}
           </FormErrorMessage>
         </FormControl>
 

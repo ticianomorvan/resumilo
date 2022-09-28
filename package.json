@@ -1,18 +1,17 @@
 {
   "name": "resumilo",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "preview": "pnpm run build && pnpm run start"
+    "preview": "pnpm run build && pnpm run start",
+    "analyze": "ANALYZE=true pnpm run build"
   },
   "dependencies": {
-    "@babel/core": "^7.19.1",
     "@chakra-ui/react": "^2.3.4",
-    "@chakra-ui/styled-system": "^2.3.3",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@fontsource/jost": "^4.5.11",
@@ -20,10 +19,12 @@
     "date-fns": "^2.29.3",
     "firebase": "^9.10.0",
     "framer-motion": "^7.3.6",
+    "nanoid": "^4.0.0",
     "next": "12.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.36.1",
+    "react-icons": "^4.4.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {

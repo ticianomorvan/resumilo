@@ -1,6 +1,5 @@
 import { User } from "../../types/user";
 import { GetServerSideProps } from "next";
-import { getUserDoc } from "../../lib/utils";
 import Image from "next/image";
 
 // Components
@@ -22,9 +21,9 @@ const Profile = ({ user }: Props) => {
       />
       <Text>{user.name}</Text>
       <Text>{user.email}</Text>
-      {user.resumenes.length > 0 ? (
-        user.resumenes.map((resumen) => (
-          <Text key={resumen.title}>{resumen.title}</Text>
+      {user.summaries.length > 0 ? (
+        user.summaries.map((summary) => (
+          <Text key={summary.title}>{summary.title}</Text>
         ))
       ) : (
         <Text>Este usuario no tiene ningún resumen.</Text>
@@ -34,18 +33,15 @@ const Profile = ({ user }: Props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const { firebase, getUserDoc } = await import("../../lib/firebase");
   const uid =
     typeof params !== "undefined" && typeof params.uid === "string"
       ? params.uid
       : null;
 
-  if (!uid) {
-    return {
-      notFound: true,
-    };
-  }
+  if (!uid) return { notFound: true };
 
-  const user = await getUserDoc(uid);
+  const user = await getUserDoc(firebase, uid);
 
   return {
     props: {

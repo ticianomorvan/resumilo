@@ -1,4 +1,5 @@
-export interface Resumen {
+export interface Summary {
+  id: string,
   title: string,
   description: string,
   topic: string,

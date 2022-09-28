@@ -1,25 +1,28 @@
 import { Button, useToast } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import BaseLayout from "../components/layouts/BaseLayout";
-import { createUserDoc, googleSignIn, isAlreadyCreated } from "../lib/utils";
+import { errorToast } from "../lib/utils";
 
 const LogIn: NextPage = () => {
   const toast = useToast();
   const router = useRouter();
 
   const createUserAction = async () => {
-    googleSignIn()
-      .then(async ({ user }) => {
-        const isInDatabase = await isAlreadyCreated(user.uid);
+    const { firebase, googleSignIn, isAlreadyCreated, createUserDoc } =
+      await import("../lib/firebase");
 
-        if (isInDatabase) return router.back();
+    googleSignIn(firebase)
+      .then(async ({ user }) => {
+        const isInDatabase = await isAlreadyCreated(firebase, user.uid);
+
+        if (isInDatabase)
+          return router.back(); // Log-in without creating a new user.
         else {
-          createUserDoc(user.uid, {
+          createUserDoc(firebase, user.uid, {
             name: user.displayName ?? "Usuario anónimo",
             avatar: user.photoURL ?? "https://ui-avatars.com/api/?name=X",
             email: user.email ?? "",
-            resumenes: [],
+            summaries: [],
           })
             .then(() => {
               toast({
@@ -30,31 +33,13 @@ const LogIn: NextPage = () => {
               });
               setTimeout(() => router.back(), 3000);
             })
-            .catch((error) =>
-              toast({
-                title: "Hubo un problema",
-                description: error,
-                status: "error",
-                isClosable: true,
-              })
-            );
+            .catch((error) => toast(errorToast(error)));
         }
       })
-      .catch((error) =>
-        toast({
-          title: "Hubo un problema",
-          description: error,
-          status: "error",
-          isClosable: true,
-        })
-      );
+      .catch((error) => toast(errorToast(error)));
   };
 
-  return (
-    <BaseLayout title="Iniciar sesión | Resumilo">
-      <Button onClick={createUserAction}>Log In</Button>;
-    </BaseLayout>
-  );
+  return <Button onClick={createUserAction}>Log In</Button>;
 };
 
 export default LogIn;

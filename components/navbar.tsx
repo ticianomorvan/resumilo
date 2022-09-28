@@ -1,16 +1,17 @@
 import Link from "next/link";
 import { Button, HStack, Text, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useAuth } from "../hooks/useAuth";
-import { closeSession } from "../lib/utils";
+import { useUser } from "../context/user_context";
 
 const Navbar = () => {
-  const { user } = useAuth();
+  const { user } = useUser();
   const router = useRouter();
   const toast = useToast();
 
-  const signOutAction = () => {
-    closeSession()
+  const signOutAction = async () => {
+    const { firebase, closeSession } = await import("../lib/firebase");
+
+    closeSession(firebase)
       .then(() => {
         toast({
           title: "Cerraste sesión correctamente.",
@@ -26,8 +27,14 @@ const Navbar = () => {
   };
 
   return (
-    <HStack position="fixed" top={0} padding={4}>
-      <Text fontSize="2xl">Resumilo</Text>
+    <HStack
+      position="fixed"
+      top={0}
+      padding={4}
+      width="full"
+      justifyContent="space-between"
+    >
+      <Text fontSize="2xl">Resumilo.</Text>
       {user ? (
         <Button colorScheme="red" onClick={signOutAction}>
           Cerrar sesión

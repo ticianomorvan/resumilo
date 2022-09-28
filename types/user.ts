@@ -1,8 +1,8 @@
-import { Resumen } from "./resumen";
+import { Summary } from "./summary";
 
 export interface User {
   name: string,
   avatar: string,
   email: string,
-  resumenes: Resumen[]
+  summaries: Summary[]
 }

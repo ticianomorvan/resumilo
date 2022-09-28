@@ -1,30 +1,16 @@
-import { Resumen } from "../../types/resumen";
-import { GetServerSideProps, NextPage } from "next";
-import { getAllResumenes } from "../../lib/utils";
+import { Heading } from "@chakra-ui/react";
 import BaseLayout from "../../components/layouts/BaseLayout";
+import Search from "../../components/search";
 
-const Index: NextPage<{ resumenes: Resumen[] }> = ({
-  resumenes,
-}: {
-  resumenes: Resumen[];
-}) => {
+const Index = () => {
   return (
-    <BaseLayout title="Resúmenes | Resumilo">
-      {resumenes.map((resumen) => (
-        <p key={resumen.title}>{resumen.title}</p>
-      ))}
+    <BaseLayout title="Resúmenes">
+      <Heading fontSize="5xl" fontWeight="light">
+        Comenzá a buscar
+      </Heading>
+      <Search />
     </BaseLayout>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const resumenes = await getAllResumenes();
-
-  return {
-    props: {
-      resumenes,
-    },
-  };
 };
 
 export default Index;
