@@ -25,16 +25,17 @@ const SummaryPage: NextPage<Props> = ({ summary, user }) => {
           {user && (
             <>
               <Text>{user.name}</Text>
-              <Link href={`/usuarios/${user.id}`}></Link>
-              <Image
-                style={{
-                  borderRadius: "50%",
-                }}
-                src={user.avatar}
-                alt={`${user.name}'s avatar`}
-                width={8}
-                height={8}
-              />
+              <Link href={`/usuarios/${user.id}`}>
+                <Image
+                  style={{
+                    borderRadius: "50%",
+                  }}
+                  src={user.avatar}
+                  alt={`${user.name}'s avatar`}
+                  width={8}
+                  height={8}
+                />
+              </Link>
             </>
           )}
         </HStack>

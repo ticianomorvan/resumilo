@@ -16,7 +16,7 @@ const SummaryItem = ({ id, title, topic }: Props) => {
     <motion.div
       initial={{ opacity: 0, translateY: 20 }}
       animate={{ opacity: 100, translateY: 0 }}
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ scale: 1.05, cursor: "pointer" }}
       onClick={() => router.push(`/resumenes/${id}`)}
     >
       <HStack gap={4} backgroundColor="green.50" padding={2} borderRadius={10}>
