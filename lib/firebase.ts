@@ -1,7 +1,7 @@
 import { FirebaseError, FirebaseOptions, getApp, getApps, initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where } from "firebase/firestore/lite";
-import { getStorage, ref } from "firebase/storage";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { Summary } from "../types/summary";
 import { User } from "../types/user";
 
@@ -169,6 +169,15 @@ export const createSummaryRef = async (document: File) => {
   try {
     const storage = await getCurrentStorage();
     return ref(storage, `summaries/${document.name}`)
+  } catch (error: unknown) {
+    throw new Error(formatFirebaseError(error))
+  }
+}
+
+export const getSummaryDownloadUrl = async (fileName: string) => {
+  try {
+    const storage = await getCurrentStorage();
+    return await getDownloadURL(ref(storage, `summaries/${fileName}`))
   } catch (error: unknown) {
     throw new Error(formatFirebaseError(error))
   }

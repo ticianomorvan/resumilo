@@ -13,7 +13,7 @@ const Home: NextPage = () => {
         Un hogar para tus resúmenes
       </Heading>
 
-      <Link href="/resumenes">
+      <Link href="resumenes">
         <Button>Resumenes</Button>
       </Link>
     </>

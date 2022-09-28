@@ -1,6 +1,6 @@
 import { Heading } from "@chakra-ui/react";
-import BaseLayout from "../../components/layouts/BaseLayout";
-import Search from "../../components/search";
+import BaseLayout from "../components/layouts/BaseLayout";
+import Search from "../components/search";
 
 const Index = () => {
   return (

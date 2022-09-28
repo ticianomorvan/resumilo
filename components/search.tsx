@@ -1,15 +1,8 @@
-import {
-  Button,
-  Grid,
-  HStack,
-  Input,
-  useToast,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, Grid, HStack, Input, useToast } from "@chakra-ui/react";
 import { FormEvent, useCallback, useState } from "react";
 import { errorToast } from "../lib/utils";
 import { Summary } from "../types/summary";
-import SummaryItem from "./summary";
+import SummaryModal from "./summary";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -54,13 +47,17 @@ const Search = () => {
         </HStack>
       </form>
       {summaries.length > 0 && (
-        <Grid gap={2}>
+        <Grid gap={4}>
           {summaries.map((summary) => (
-            <SummaryItem
+            <SummaryModal
               key={summary.id}
               id={summary.id}
               title={summary.title}
+              description={summary.description}
               topic={summary.topic}
+              file_reference={summary.file_reference}
+              author_id={summary.author_id}
+              date={summary.date}
             />
           ))}
         </Grid>
