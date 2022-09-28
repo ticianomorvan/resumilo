@@ -9,9 +9,9 @@ const Navbar = () => {
   const toast = useToast();
 
   const signOutAction = async () => {
-    const { firebase, closeSession } = await import("../lib/firebase");
+    const { closeSession } = await import("../lib/firebase");
 
-    closeSession(firebase)
+    closeSession()
       .then(() => {
         toast({
           title: "Cerraste sesión correctamente.",

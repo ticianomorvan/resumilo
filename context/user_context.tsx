@@ -10,6 +10,7 @@ import {
 import { firebase } from "../lib/firebase";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { formatFirebaseError } from "../lib/firebase";
+import { useRouter } from "next/router";
 
 interface Context {
   user: User | undefined;
@@ -30,6 +31,7 @@ interface Props {
 export default function UserProvider({ children }: Props) {
   const [user, setUser] = useState<User>();
   const [loadingUser, setLoadingUser] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const auth = getAuth(firebase);

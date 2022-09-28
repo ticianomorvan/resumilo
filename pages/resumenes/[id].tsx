@@ -1,27 +1,15 @@
 import { GetServerSideProps, NextPage } from "next";
+import { User } from "../../types/user";
 import { Summary } from "../../types/summary";
 import { Badge, Heading, HStack, Image, Text, VStack } from "@chakra-ui/react";
 import BaseLayout from "../../components/layouts/BaseLayout";
-import { useCallback, useEffect, useState } from "react";
-import { User } from "../../types/user";
 
 interface Props {
   summary: Summary;
+  user: User;
 }
 
-const SummaryPage: NextPage<Props> = ({ summary }) => {
-  const [user, setUser] = useState<User>();
-
-  const getUser = useCallback(async () => {
-    const { firebase, getUserDoc } = await import("../../lib/firebase");
-    const user = await getUserDoc(firebase, summary.author_id);
-    return user;
-  }, [summary.author_id]);
-
-  useEffect(() => {
-    getUser().then((value) => setUser(value));
-  }, [getUser]);
-
+const SummaryPage: NextPage<Props> = ({ summary, user }) => {
   return (
     <BaseLayout title={summary.title}>
       <VStack>
@@ -61,13 +49,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   if (!id) return { notFound: true };
 
-  const { firebase, getSummaryById } = await import("../../lib/firebase");
+  const { getSummaryById, getUserDoc } = await import("../../lib/firebase");
 
-  const summary = await getSummaryById(firebase, id);
+  const summary = await getSummaryById(id);
+  const user = await getUserDoc(summary.author_id);
 
   return {
     props: {
       summary,
+      user,
     },
   };
 };

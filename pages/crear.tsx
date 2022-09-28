@@ -2,9 +2,8 @@ import * as Yup from "yup";
 import { format } from "date-fns";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { uploadBytes } from "firebase/storage";
-import { Summary } from "../types/summary";
 import { errorToast } from "../lib/utils";
+import { useUser } from "../context/user_context";
 import { nanoid } from "nanoid";
 
 // Components
@@ -17,7 +16,8 @@ import {
   Input,
   useToast,
 } from "@chakra-ui/react";
-import { useUser } from "../context/user_context";
+import { useRouter } from "next/router";
+import { Summary } from "../types/summary";
 
 const TEN_MEGABYTES_LIMIT = 10000000; // 10 MB to Byte conversion
 
@@ -32,7 +32,6 @@ const validationSchema = Yup.object().shape({
 });
 
 interface Inputs {
-  id: string;
   title: string;
   description: string;
   topic: string;
@@ -49,61 +48,57 @@ const Create = () => {
 
   const { user } = useUser();
   const toast = useToast();
+  const router = useRouter();
 
-  if (!user) return <p>Cargando...</p>;
+  if (!user) return <p>No estás logueado.</p>;
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const resumenDocument = data.file.item(0); // Get the selected file from the input.
+  const onSubmit: SubmitHandler<Inputs> = async ({
+    title,
+    description,
+    file,
+    topic,
+  }) => {
+    const resumenDocument = file.item(0); // Get the selected file from the input.
 
-    if (!resumenDocument) {
-      return toast({
-        title: "No elegiste ningún archivo para subir.",
-        description: "Tip: ¡Puedes subir archivos .pdf o .docx de hasta 10 MB!",
-        status: "info",
-        isClosable: true,
-      });
-    }
-
+    if (!resumenDocument)
+      return toast(errorToast("Tienes que subir un archivo .docx o .pdf."));
     if (resumenDocument.size > TEN_MEGABYTES_LIMIT)
-      return alert("El archivo tiene que ser inferior a 10 MB.");
+      return toast(errorToast("El archivo tiene que ser inferior a 10 MB."));
 
-    const { firebase, createSummaryRef, createSummaryDoc } = await import(
+    const { createSummaryRef, createSummaryDoc } = await import(
       "../lib/firebase"
     );
 
-    const storageRef = createSummaryRef(firebase, resumenDocument);
+    const { uploadBytes } = await import("firebase/storage");
 
-    uploadBytes(storageRef, resumenDocument)
-      .then((snapshot) => {
-        if (snapshot) {
-          const newSummary: Summary = {
-            id: nanoid(),
-            title: data.title,
-            description: data.description,
-            topic: data.topic,
-            author_id: user.uid,
-            file_reference: snapshot.ref.name,
-            date: format(new Date(), "yyyy-MM-dd"),
-          };
+    const storageRef = await createSummaryRef(resumenDocument);
 
-          createSummaryDoc(firebase, newSummary)
-            .then(() =>
-              toast({
-                title: "¡Tu resumen se subió correctamente!",
-                status: "success",
-                duration: 2000,
-              })
-            )
-            .catch((error) => toast(errorToast(error)));
+    try {
+      const { ref } = await uploadBytes(storageRef, resumenDocument);
 
-          reset({
-            title: "",
-            description: "",
-            topic: "",
-          });
-        }
-      })
-      .catch((error) => toast(errorToast(error)));
+      const summary: Summary = {
+        id: nanoid(),
+        title,
+        description,
+        topic,
+        author_id: user.uid,
+        date: format(new Date(), "yyyy-MM-dd"),
+        file_reference: ref.name,
+      };
+      await createSummaryDoc(summary);
+
+      return toast({
+        title: "¡Creaste un resumen!",
+        description: `Fue designado con la ID: ${summary.id}`,
+        status: "success",
+        duration: 2000,
+        onCloseComplete: () => router.push(`/resumenes/${summary.id}`),
+      });
+    } catch (error: any) {
+      return toast(errorToast(error.message));
+    } finally {
+      reset({ title: "", description: "", file: undefined, topic: "" });
+    }
   };
 
   return (

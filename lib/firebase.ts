@@ -1,6 +1,6 @@
 import { FirebaseApp, FirebaseError, FirebaseOptions, getApp, getApps, initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-import { collection, doc, getDoc, getDocs, getFirestore, Query, query, setDoc, where } from "firebase/firestore/lite";
+import { browserLocalPersistence, browserPopupRedirectResolver, getAuth, GoogleAuthProvider, indexedDBLocalPersistence, initializeAuth, signInWithPopup, signOut } from "firebase/auth";
+import { collection, doc, getDoc, getDocs, getFirestore, initializeFirestore, Query, query, setDoc, where } from "firebase/firestore/lite";
 import { getStorage, ref } from "firebase/storage";
 import { Summary } from "../types/summary";
 import { User } from "../types/user";
@@ -16,6 +16,19 @@ const firebaseConfig: FirebaseOptions = {
 
 export const firebase = getApps().length <= 0 ? initializeApp(firebaseConfig) : getApp()
 
+export const getCurrentApp = async () => getApp()
+
+export const getCurrentFirestore = async () => getFirestore()
+
+export const getCurrentStorage = async () => getStorage()
+
+export const createAuth = async () => {
+  const app = await getCurrentApp()
+  return initializeAuth(app, {
+    persistence: [indexedDBLocalPersistence, browserLocalPersistence],
+  })
+}
+
 // Utils
 
 export const formatFirebaseError = (error: unknown) => {
@@ -26,9 +39,9 @@ export const formatFirebaseError = (error: unknown) => {
 // Cloud Firestore
 
 /** @returns All "summaries" from Firebase's Cloud Firestore. */
-export const getAllSummaries = async (firebase: FirebaseApp) => {
+export const getAllSummaries = async () => {
   try {
-    const firestore = getFirestore(firebase)
+    const firestore = await getCurrentFirestore()
     const query: Summary[] = await getDocs(collection(firestore, "summaries"))
       .then((snapshot) => snapshot.docs.map((doc) => doc.data() as Summary))
 
@@ -38,9 +51,9 @@ export const getAllSummaries = async (firebase: FirebaseApp) => {
   }
 }
 
-export const getSummaryById = async (firebase: FirebaseApp, id: string) => {
+export const getSummaryById = async (id: string) => {
   try {
-    const firestore = getFirestore(firebase)
+    const firestore = await getCurrentFirestore()
     const ref = doc(firestore, "summaries", id)
     const summary = await getDoc(ref)
     return summary.data() as Summary
@@ -50,28 +63,23 @@ export const getSummaryById = async (firebase: FirebaseApp, id: string) => {
 }
 
 export const createSummaryDoc = async (
-  firebase: FirebaseApp,
   { id, title, description, topic, date, author_id, file_reference }: Summary
 ) => {
   try {
-    const firestore = getFirestore(firebase)
+    const firestore = await getCurrentFirestore()
+
     return await setDoc(doc(collection(firestore, "summaries"), id), {
-      id,
-      title,
-      description,
-      topic,
-      date,
-      author_id,
-      file_reference,
+      id, title, description, topic, date, author_id, file_reference,
     })
   } catch (error: unknown) {
     throw new Error(formatFirebaseError(error))
   }
 }
 
-export const filterSummaries = async (firebase: FirebaseApp, search: string) => {
+// This solution is temporal until we can include something like Algolia or Elasticsearch.
+export const filterSummaries = async (search: string) => {
   try {
-    const firestore = getFirestore(firebase)
+    const firestore = await getCurrentFirestore()
     const querySnapshot = query(collection(firestore, "summaries"))
     const documents = await getDocs(querySnapshot)
     let matchingDocuments: Summary[] = []
@@ -79,9 +87,9 @@ export const filterSummaries = async (firebase: FirebaseApp, search: string) => 
     for (let i = 0; i < documents.size; i++) {
       const data = documents.docs[i].data() as Summary
       if (
-        (data.title.includes(search)) ||
-        (data.description.includes(search)) ||
-        (data.topic.includes(search))
+        (data.title.toLowerCase().includes(search)) ||
+        (data.description.toLowerCase().includes(search)) ||
+        (data.topic.toLowerCase().includes(search))
       ) {
         matchingDocuments = [...matchingDocuments, data]
       }
@@ -96,9 +104,9 @@ export const filterSummaries = async (firebase: FirebaseApp, search: string) => 
 // When we create a user, we don't expect them to have any summaries created,
 // so we don't pass any parameter to it. We'll later update the user when they
 // create a summary.
-export const createUserDoc = async (firebase: FirebaseApp, uid: string, { name, avatar, email, summaries = [] }: User) => {
+export const createUserDoc = async (uid: string, { name, avatar, email, summaries = [] }: User) => {
   try {
-    const firestore = getFirestore(firebase)
+    const firestore = await getCurrentFirestore()
     return await setDoc(doc(firestore, "users", uid), {
       name,
       avatar,
@@ -110,9 +118,9 @@ export const createUserDoc = async (firebase: FirebaseApp, uid: string, { name, 
   }
 }
 
-export const isAlreadyCreated = async (firebase: FirebaseApp, uid: string) => {
+export const isAlreadyCreated = async (uid: string) => {
   try {
-    const firestore = getFirestore(firebase)
+    const firestore = await getCurrentFirestore()
     const query = await getDoc(doc(firestore, "users", uid))
     return query.exists()
   } catch (error: unknown) {
@@ -120,9 +128,9 @@ export const isAlreadyCreated = async (firebase: FirebaseApp, uid: string) => {
   }
 }
 
-export const getUserDoc = async (firebase: FirebaseApp, uid: string) => {
+export const getUserDoc = async (uid: string) => {
   try {
-    const firestore = getFirestore(firebase)
+    const firestore = await getCurrentFirestore()
     const query = await getDoc(doc(firestore, "users", uid))
     return query.data() as User
   } catch (error: unknown) {
@@ -130,9 +138,9 @@ export const getUserDoc = async (firebase: FirebaseApp, uid: string) => {
   }
 }
 
-export const getUserSummaries = async (firebase: FirebaseApp, uid: string) => {
+export const getUserSummaries = async (uid: string) => {
   try {
-    const firestore = getFirestore(firebase)
+    const firestore = await getCurrentFirestore()
     const querySnapshot = query(collection(firestore, "summaries"), where("author_uid", "==", uid));
     return getDocs(querySnapshot)
   } catch (error: unknown) {
@@ -142,19 +150,19 @@ export const getUserSummaries = async (firebase: FirebaseApp, uid: string) => {
 
 // Authentication
 
-export const googleSignIn = (firebase: FirebaseApp) => {
+export const googleSignIn = async () => {
   try {
-    const auth = getAuth(firebase)
+    const auth = await createAuth()
     const provider = new GoogleAuthProvider()
-    return signInWithPopup(auth, provider)
+    return signInWithPopup(auth, provider, browserPopupRedirectResolver)
   } catch (error: unknown) {
     throw new Error(formatFirebaseError(error))
   }
 }
 
-export const closeSession = (firebase: FirebaseApp) => {
+export const closeSession = async () => {
   try {
-    const auth = getAuth(firebase)
+    const auth = await createAuth()
     return signOut(auth)
   } catch (error: unknown) {
     throw new Error(formatFirebaseError(error))
@@ -163,9 +171,9 @@ export const closeSession = (firebase: FirebaseApp) => {
 
 // Storage
 
-export const createSummaryRef = (firebase: FirebaseApp, document: File) => {
+export const createSummaryRef = async (document: File) => {
   try {
-    const storage = getStorage(firebase)
+    const storage = await getCurrentStorage();
     return ref(storage, `summaries/${document.name}`)
   } catch (error: unknown) {
     throw new Error(formatFirebaseError(error))

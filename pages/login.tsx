@@ -8,17 +8,18 @@ const LogIn: NextPage = () => {
   const router = useRouter();
 
   const createUserAction = async () => {
-    const { firebase, googleSignIn, isAlreadyCreated, createUserDoc } =
-      await import("../lib/firebase");
+    const { googleSignIn, isAlreadyCreated, createUserDoc } = await import(
+      "../lib/firebase"
+    );
 
-    googleSignIn(firebase)
+    googleSignIn()
       .then(async ({ user }) => {
-        const isInDatabase = await isAlreadyCreated(firebase, user.uid);
+        const isInDatabase = await isAlreadyCreated(user.uid);
 
         if (isInDatabase)
           return router.back(); // Log-in without creating a new user.
         else {
-          createUserDoc(firebase, user.uid, {
+          createUserDoc(user.uid, {
             name: user.displayName ?? "Usuario anónimo",
             avatar: user.photoURL ?? "https://ui-avatars.com/api/?name=X",
             email: user.email ?? "",

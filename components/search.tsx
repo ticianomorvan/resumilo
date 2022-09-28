@@ -1,21 +1,42 @@
-import { Button, HStack, Input, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Grid,
+  HStack,
+  Input,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import { FormEvent, useCallback, useState } from "react";
+import { errorToast } from "../lib/utils";
 import { Summary } from "../types/summary";
 import SummaryItem from "./summary";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [summaries, setSummaries] = useState<Summary[]>([]);
+  const toast = useToast();
 
-  const getSummaries = useCallback(async (search: string) => {
-    const { firebase, filterSummaries } = await import("../lib/firebase");
-    const summaries = await filterSummaries(firebase, search);
-    return summaries;
-  }, []);
+  const getSummaries = useCallback(
+    async (search: string) => {
+      const { filterSummaries } = await import("../lib/firebase");
+      if (search.length < 5) {
+        toast(
+          errorToast("La búsqueda debe tener como mínimo cinco caracteres.")
+        );
+        return;
+      } else {
+        const summaries = await filterSummaries(search);
+        return summaries;
+      }
+    },
+    [toast]
+  );
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    getSummaries(searchQuery).then((values) => setSummaries(values));
+    getSummaries(searchQuery).then((values) =>
+      values ? setSummaries(values) : null
+    );
   };
 
   return (
@@ -24,7 +45,7 @@ const Search = () => {
         <HStack gap={4} width="xs" marginY={4}>
           <Input
             placeholder={`Ej: "Partidos políticos"`}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
             value={searchQuery}
           />
           <Button colorScheme="green" type="submit">
@@ -33,17 +54,16 @@ const Search = () => {
         </HStack>
       </form>
       {summaries.length > 0 && (
-        <VStack gap={2}>
+        <Grid gap={2}>
           {summaries.map((summary) => (
             <SummaryItem
               key={summary.id}
               id={summary.id}
               title={summary.title}
-              author_id={summary.author_id}
               topic={summary.topic}
             />
           ))}
-        </VStack>
+        </Grid>
       )}
     </>
   );
