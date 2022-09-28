@@ -14,10 +14,12 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { Summary } from "../types/summary";
+import Link from "next/link";
 
 const TEN_MEGABYTES_LIMIT = 10000000; // 10 MB to Byte conversion
 
@@ -50,7 +52,17 @@ const Create = () => {
   const toast = useToast();
   const router = useRouter();
 
-  if (!user) return <p>No estás logueado.</p>;
+  if (!user)
+    return (
+      <>
+        <Text>No iniciaste sesión.</Text>
+        <Link href="/login">
+          <Text color="green.500" cursor="pointer" textDecoration="underline">
+            Hazlo haciendo click aquí.
+          </Text>
+        </Link>
+      </>
+    );
 
   const onSubmit: SubmitHandler<Inputs> = async ({
     title,

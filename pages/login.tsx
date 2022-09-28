@@ -20,6 +20,7 @@ const LogIn: NextPage = () => {
           return router.back(); // Log-in without creating a new user.
         else {
           createUserDoc(user.uid, {
+            id: user.uid,
             name: user.displayName ?? "Usuario anónimo",
             avatar: user.photoURL ?? "https://ui-avatars.com/api/?name=X",
             email: user.email ?? "",
@@ -31,8 +32,8 @@ const LogIn: NextPage = () => {
                 description: "Ahora puedes usar Resumilo :)",
                 status: "success",
                 duration: 3000,
+                onCloseComplete: () => router.back(),
               });
-              setTimeout(() => router.back(), 3000);
             })
             .catch((error) => toast(errorToast(error)));
         }

@@ -3,6 +3,7 @@ import { User } from "../../types/user";
 import { Summary } from "../../types/summary";
 import { Badge, Heading, HStack, Image, Text, VStack } from "@chakra-ui/react";
 import BaseLayout from "../../components/layouts/BaseLayout";
+import Link from "next/link";
 
 interface Props {
   summary: Summary;
@@ -24,6 +25,7 @@ const SummaryPage: NextPage<Props> = ({ summary, user }) => {
           {user && (
             <>
               <Text>{user.name}</Text>
+              <Link href={`/usuarios/${user.id}`}></Link>
               <Image
                 style={{
                   borderRadius: "50%",

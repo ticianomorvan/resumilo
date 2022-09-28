@@ -1,6 +1,6 @@
-import { FirebaseApp, FirebaseError, FirebaseOptions, getApp, getApps, initializeApp } from "firebase/app";
-import { browserLocalPersistence, browserPopupRedirectResolver, getAuth, GoogleAuthProvider, indexedDBLocalPersistence, initializeAuth, signInWithPopup, signOut } from "firebase/auth";
-import { collection, doc, getDoc, getDocs, getFirestore, initializeFirestore, Query, query, setDoc, where } from "firebase/firestore/lite";
+import { FirebaseError, FirebaseOptions, getApp, getApps, initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where } from "firebase/firestore/lite";
 import { getStorage, ref } from "firebase/storage";
 import { Summary } from "../types/summary";
 import { User } from "../types/user";
@@ -21,13 +21,6 @@ export const getCurrentApp = async () => getApp()
 export const getCurrentFirestore = async () => getFirestore()
 
 export const getCurrentStorage = async () => getStorage()
-
-export const createAuth = async () => {
-  const app = await getCurrentApp()
-  return initializeAuth(app, {
-    persistence: [indexedDBLocalPersistence, browserLocalPersistence],
-  })
-}
 
 // Utils
 
@@ -104,10 +97,11 @@ export const filterSummaries = async (search: string) => {
 // When we create a user, we don't expect them to have any summaries created,
 // so we don't pass any parameter to it. We'll later update the user when they
 // create a summary.
-export const createUserDoc = async (uid: string, { name, avatar, email, summaries = [] }: User) => {
+export const createUserDoc = async (uid: string, { id, name, avatar, email, summaries = [] }: User) => {
   try {
     const firestore = await getCurrentFirestore()
     return await setDoc(doc(firestore, "users", uid), {
+      id,
       name,
       avatar,
       email,
@@ -152,9 +146,9 @@ export const getUserSummaries = async (uid: string) => {
 
 export const googleSignIn = async () => {
   try {
-    const auth = await createAuth()
+    const auth = getAuth()
     const provider = new GoogleAuthProvider()
-    return signInWithPopup(auth, provider, browserPopupRedirectResolver)
+    return signInWithPopup(auth, provider)
   } catch (error: unknown) {
     throw new Error(formatFirebaseError(error))
   }
@@ -162,7 +156,7 @@ export const googleSignIn = async () => {
 
 export const closeSession = async () => {
   try {
-    const auth = await createAuth()
+    const auth = getAuth()
     return signOut(auth)
   } catch (error: unknown) {
     throw new Error(formatFirebaseError(error))

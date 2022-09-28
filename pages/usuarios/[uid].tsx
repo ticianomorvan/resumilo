@@ -33,7 +33,7 @@ const Profile = ({ user }: Props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { firebase, getUserDoc } = await import("../../lib/firebase");
+  const { getUserDoc } = await import("../../lib/firebase");
   const uid =
     typeof params !== "undefined" && typeof params.uid === "string"
       ? params.uid
@@ -41,7 +41,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   if (!uid) return { notFound: true };
 
-  const user = await getUserDoc(firebase, uid);
+  const user = await getUserDoc(uid);
 
   return {
     props: {
