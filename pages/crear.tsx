@@ -117,7 +117,7 @@ const Create = () => {
 
   return (
     <BaseLayout title="Creación | Resumilo">
-      <div className="grid justify-items-center lg:grid-cols-2 lg:w-3/4 lg:items-center">
+      <div className="grid justify-items-center lg:grid-cols-2 lg:w-3/4 lg:items-center mt-[16em] lg:mt-[8em] xl:mt-0">
         <h1 className="text-center">Creá un resumen</h1>
 
         <form
