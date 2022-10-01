@@ -4,7 +4,6 @@ import Image from "next/image";
 
 // Components
 import BaseLayout from "../../components/layouts/BaseLayout";
-import { Text } from "@chakra-ui/react";
 
 interface Props {
   user: User;

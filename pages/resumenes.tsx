@@ -1,14 +1,15 @@
-import { Heading } from "@chakra-ui/react";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import BaseLayout from "../components/layouts/BaseLayout";
-import Search from "../components/search";
+const Search = dynamic(() => import("../components/search"));
 
 const Index = () => {
   return (
     <BaseLayout title="Resúmenes">
-      <Heading fontSize="5xl" fontWeight="light">
-        Comenzá a buscar
-      </Heading>
-      <Search />
+      <h1>Comenzá a buscar</h1>
+      <Suspense fallback={`Loading...`}>
+        <Search />
+      </Suspense>
     </BaseLayout>
   );
 };

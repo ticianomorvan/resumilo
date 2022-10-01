@@ -1,5 +1,5 @@
 import { FirebaseError, FirebaseOptions, getApp, getApps, initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { getAuth, indexedDBLocalPersistence, initializeAuth, signOut } from "firebase/auth";
 import { collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where } from "firebase/firestore/lite";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { Summary } from "../types/summary";
@@ -21,6 +21,10 @@ export const getCurrentApp = async () => getApp()
 export const getCurrentFirestore = async () => getFirestore()
 
 export const getCurrentStorage = async () => getStorage()
+
+export const firebaseAuth = initializeAuth(firebase, {
+  persistence: [indexedDBLocalPersistence]
+})
 
 // Utils
 
@@ -143,16 +147,6 @@ export const getUserSummaries = async (uid: string) => {
 }
 
 // Authentication
-
-export const googleSignIn = async () => {
-  try {
-    const auth = getAuth()
-    const provider = new GoogleAuthProvider()
-    return signInWithPopup(auth, provider)
-  } catch (error: unknown) {
-    throw new Error(formatFirebaseError(error))
-  }
-}
 
 export const closeSession = async () => {
   try {

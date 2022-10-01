@@ -8,23 +8,10 @@ import { parseISO, formatDistance } from "date-fns";
 import { motion } from "framer-motion";
 import esLocale from "date-fns/locale/es";
 
+import * as Dialog from "@radix-ui/react-dialog";
+import Button from "./button";
+
 // Components
-import {
-  Badge,
-  Box,
-  Button,
-  HStack,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useDisclosure,
-  VStack,
-} from "@chakra-ui/react";
 
 export default function SummaryModal({
   id,
@@ -35,7 +22,7 @@ export default function SummaryModal({
   date,
   file_reference,
 }: Summary) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [user, setUser] = useState<User>();
   const [downloadUrl, setDownloadUrl] = useState<string>();
 
@@ -47,22 +34,47 @@ export default function SummaryModal({
   }, [author_id, file_reference]);
 
   return (
-    <>
-      <motion.div
-        whileHover={{ scale: 1.05, cursor: "pointer" }}
-        onClick={onOpen}
-      >
-        <HStack backgroundColor="green.50" rounded="lg" padding={4} gap={8}>
-          <Text fontSize="xl">{title}</Text>
-          <HStack>
-            <Badge colorScheme="green">{topic}</Badge>
-            {user && <Text>{user.name}</Text>}
-          </HStack>
-        </HStack>
-      </motion.div>
+    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog.Trigger>
+        <Button>Abrir</Button>
+      </Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 flex justify-center items-center bg-zinc-800/60 backdrop-blur-sm dialog-overlay">
+          <Dialog.Content className="w-2/6 bg-white p-4 rounded-lg dialog-content">
+            <Dialog.Title className="flex justify-between">
+              <p className="text-md text-zinc-300">{id}</p>
+            </Dialog.Title>
+            <Dialog.Description>
+              <p>{description}</p>
+              <p>{topic}</p>
+              <p>
+                {formatDistance(parseISO(date), new Date(), {
+                  addSuffix: true,
+                  locale: esLocale,
+                })}
+              </p>
+            </Dialog.Description>
+          </Dialog.Content>
+        </Dialog.Overlay>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
 
-      <Modal id={id} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
+/*
+<ModalOverlay />
+<motion.div
+          whileHover={{ scale: 1.05, cursor: "pointer" }}
+          onClick={() => setIsOpen(true)}
+        >
+          <div className="flex flex-col bg-green-50 rounded-lg p-4 gap-8">
+            <p className="text-xl">{title}</p>
+            <div className="flex flex-col">
+              <span className="bg-green-100 text-green-900">{topic}</span>
+              {user && <p>{user.name}</p>}
+            </div>
+          </div>
+        </motion.div>
         <ModalContent>
           <ModalHeader fontSize="sm" textColor="gray.400" fontWeight="normal">
             {id}
@@ -115,7 +127,4 @@ export default function SummaryModal({
             </HStack>
           </ModalFooter>
         </ModalContent>
-      </Modal>
-    </>
-  );
-}
+*/

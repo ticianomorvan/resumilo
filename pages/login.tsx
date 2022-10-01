@@ -18,43 +18,36 @@ const LogIn: NextPage = () => {
     const auth = firebaseAuth;
     const provider = new GoogleAuthProvider();
 
-    const result = await signInWithPopup(
+    const { user } = await signInWithPopup(
       auth,
       provider,
       browserPopupRedirectResolver
     );
 
-    return toast(`Iniciaste sesión como ${result.user.displayName}`);
-
-    /*
-    googleSignIn()
-      .then(async ({ user }) => {
-        const isInDatabase = await isAlreadyCreated(user.uid);
-
-        if (isInDatabase)
-          return router.back(); // Log-in without creating a new user.
-        else {
-          createUserDoc(user.uid, {
-            id: user.uid,
-            name: user.displayName ?? "Usuario anónimo",
-            avatar: user.photoURL ?? "https://ui-avatars.com/api/?name=X",
-            email: user.email ?? "",
-            summaries: [],
-          })
-            .then(() => {
-              toast({
-                title: "¡Iniciaste sesión correctamente!",
-                description: "Ahora puedes usar Resumilo :)",
-                status: "success",
-                duration: 3000,
-                onCloseComplete: () => router.back(),
-              });
-            })
-            .catch((error) => toast(errorToast(error)));
+    if (await isAlreadyCreated(user.uid)) {
+      router.back();
+    } else {
+      toast.promise(
+        createUserDoc(user.uid, {
+          id: user.uid,
+          name: user.displayName ?? "Anónimo",
+          avatar:
+            user.photoURL ??
+            `https://ui-avatars.com/api/?name=${
+              user.displayName
+                ? encodeURIComponent(user.displayName)
+                : "John-Doe"
+            }`,
+          email: user.email ?? "johndoe@gmail.com",
+          summaries: [],
+        }),
+        {
+          loading: "Creándote un usuario...",
+          success: "¡Usuario creado con éxito! Ahora puedes usar Resumilo",
+          error: "Hubo un error al crear tu usuario.",
         }
-      })
-      .catch((error) => toast(errorToast(error)));
-      */
+      );
+    }
   };
 
   return <Button onClick={createUserAction}>Log In</Button>;
