@@ -20,8 +20,6 @@ export const navbar = {
   })
 }
 
-
-
 // Button
 
 const button = style({
@@ -72,11 +70,11 @@ export const badge = style({
 
 export const inputField = {
   container: style({ marginBlock: vars.spacing.md }),
-  label: style({ fontSize: vars.text.md, paddingBlock: vars.spacing.md }),
+  label: style({ fontSize: vars.text.md, paddingBlock: vars.spacing.xs }),
   input: style({
     width: '100%',
     padding: vars.spacing.xs,
-    borderRadius: vars.rounded.md,
+    borderRadius: vars.rounded.sm,
     borderColor: 'black',
     borderWidth: '1px',
     ":focus-visible": {
