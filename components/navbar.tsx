@@ -1,24 +1,17 @@
 import Link from "next/link";
-import { Button, HStack, Text, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useUser } from "../context/user_context";
+import { useUser } from "../hooks/useUser";
 
 const Navbar = () => {
   const { user } = useUser();
   const router = useRouter();
-  const toast = useToast();
 
   const signOutAction = async () => {
     const { closeSession } = await import("../lib/firebase");
 
     closeSession()
       .then(() => {
-        toast({
-          title: "Cerraste sesión correctamente.",
-          status: "info",
-          variant: "subtle",
-          duration: 1000,
-        });
+        alert("cerraste sesión");
       })
       .finally(() => {
         if (router.pathname.endsWith("/")) return router.reload();
@@ -27,24 +20,18 @@ const Navbar = () => {
   };
 
   return (
-    <HStack
-      position="fixed"
-      top={0}
-      padding={4}
-      width="full"
-      justifyContent="space-between"
-    >
-      <Text fontSize="2xl">Resumilo.</Text>
+    <nav className="p-4 w-full flex justify-between items-center">
+      <p className="text-2xl">Resumilo.</p>
       {user ? (
-        <Button colorScheme="red" onClick={signOutAction}>
+        <button className="button warning" onClick={signOutAction}>
           Cerrar sesión
-        </Button>
+        </button>
       ) : (
         <Link href="/login">
-          <Button>Iniciar sesión</Button>
+          <button className="button ghost">Iniciar sesión</button>
         </Link>
       )}
-    </HStack>
+    </nav>
   );
 };
 

@@ -1,25 +1,22 @@
-import * as Yup from "yup";
+import { Summary } from "../types/summary";
 import { format } from "date-fns";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { errorToast } from "../lib/utils";
-import { useUser } from "../context/user_context";
 import { nanoid } from "nanoid";
+import toast from "react-hot-toast";
+
+// react-hook-form
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+// Hooks
+import { useRouter } from "next/router";
+import { useUser } from "../hooks/useUser";
 
 // Components
 import BaseLayout from "../components/layouts/BaseLayout";
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { Summary } from "../types/summary";
 import Link from "next/link";
+import InputField from "../components/input_field";
+import Button from "../components/button";
 
 const TEN_MEGABYTES_LIMIT = 10000000; // 10 MB to Byte conversion
 
@@ -49,17 +46,13 @@ const Create = () => {
   } = useForm<Inputs>({ resolver: yupResolver(validationSchema) });
 
   const { user } = useUser();
-  const toast = useToast();
-  const router = useRouter();
 
   if (!user)
     return (
       <>
-        <Text>No iniciaste sesión.</Text>
+        <p>No iniciaste sesión.</p>
         <Link href="/login">
-          <Text color="green.500" cursor="pointer" textDecoration="underline">
-            Hazlo haciendo click aquí.
-          </Text>
+          <p className="text-green-500 underline">Hazlo haciendo click aquí.</p>
         </Link>
       </>
     );
@@ -72,93 +65,109 @@ const Create = () => {
   }) => {
     const resumenDocument = file.item(0); // Get the selected file from the input.
 
-    if (!resumenDocument)
-      return toast(errorToast("Tienes que subir un archivo .docx o .pdf."));
-    if (resumenDocument.size > TEN_MEGABYTES_LIMIT)
-      return toast(errorToast("El archivo tiene que ser inferior a 10 MB."));
-
-    const { createSummaryRef, createSummaryDoc } = await import(
-      "../lib/firebase"
-    );
-
-    const { uploadBytes } = await import("firebase/storage");
-
-    const storageRef = await createSummaryRef(resumenDocument);
-
-    try {
-      const { ref } = await uploadBytes(storageRef, resumenDocument);
-
-      const summary: Summary = {
-        id: nanoid(),
-        title,
-        description,
-        topic,
-        author_id: user.uid,
-        date: format(new Date(), "yyyy-MM-dd"),
-        file_reference: ref.name,
-      };
-      await createSummaryDoc(summary);
-
-      return toast({
-        title: "¡Creaste un resumen!",
-        description: `Fue designado con la ID: ${summary.id}`,
-        status: "success",
-        duration: 2000,
-        onCloseComplete: () => router.push(`/resumenes/${summary.id}`),
+    if (!resumenDocument) {
+      toast.error("Tienes que subir un archivo .docx o .pdf.", {
+        duration: 3000,
       });
-    } catch (error: any) {
-      return toast(errorToast(error.message));
-    } finally {
-      reset({ title: "", description: "", file: undefined, topic: "" });
+    } else if (resumenDocument.size > TEN_MEGABYTES_LIMIT) {
+      toast.error("No puedes subir un archivo de más de 10 MB", {
+        duration: 3000,
+      });
+    } else {
+      const { createSummaryRef, createSummaryDoc } = await import(
+        "../lib/firebase"
+      );
+
+      const { uploadBytes } = await import("firebase/storage");
+
+      const storageRef = await createSummaryRef(resumenDocument);
+
+      try {
+        const { ref } = await toast.promise(
+          uploadBytes(storageRef, resumenDocument),
+          {
+            loading: "Subiendo documento...",
+            success: "¡Documento subido con éxito!",
+            error: "Hubo un error al subir tu documento.",
+          }
+        );
+
+        const summary: Summary = {
+          id: nanoid(),
+          title,
+          description,
+          topic,
+          author_id: user.uid,
+          date: format(new Date(), "yyyy-MM-dd"),
+          file_reference: ref.name,
+        };
+
+        toast.promise(createSummaryDoc(summary), {
+          loading: `Creando resumen: ${summary.title}`,
+          success: `¡Resumen creado!`,
+          error: `Hubo un error al crear tu resumen.`,
+        });
+      } catch (error: any) {
+        toast.error(error, { duration: 3000 });
+      } finally {
+        reset({ title: "", description: "", file: undefined, topic: "" });
+      }
     }
   };
 
   return (
     <BaseLayout title="Creación | Resumilo">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl isInvalid={Boolean(errors.title)}>
-          <FormLabel htmlFor="title">Título</FormLabel>
-          <Input id="title" {...register("title")} />
+      <div className="grid justify-items-center lg:grid-cols-2 lg:w-3/4 lg:items-center">
+        <h1 className="text-center">Creá un resumen</h1>
 
-          <FormErrorMessage>
-            {errors.title && <p>{errors.title.message}</p>}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={Boolean(errors.description)}>
-          <FormLabel htmlFor="description">Descripción</FormLabel>
-          <Input id="description" {...register("description")} />
-
-          <FormErrorMessage>
-            {errors.description && <p>{errors.description.message}</p>}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={Boolean(errors.topic)}>
-          <FormLabel htmlFor="topic">Tema</FormLabel>
-          <Input id="topic" {...register("topic")} />
-
-          <FormErrorMessage>
-            {errors.topic && <p>{errors.topic.message}</p>}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={Boolean(errors.file)}>
-          <FormLabel htmlFor="document">Documento</FormLabel>
-          <Input
-            id="document"
-            type="file"
-            accept="application/pdf, application/msword"
-            {...register("file")}
+        <form
+          className="w-[90%] px-3 border-black border-2 rounded-lg"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <InputField
+            inputName="title"
+            label="Título"
+            register={register}
+            error={errors.title}
           />
 
-          <FormErrorMessage>
-            {errors.file && <p>{errors.file.message}</p>}
-          </FormErrorMessage>
-        </FormControl>
+          <InputField
+            inputName="description"
+            label="Descripción"
+            register={register}
+            error={errors.description}
+          />
 
-        <Button type="submit">Subir</Button>
-      </form>
+          <InputField
+            inputName="topic"
+            label="Tema"
+            register={register}
+            error={errors.topic}
+          />
+
+          <div className="my-2">
+            <label className="flex flex-col gap-y-2" htmlFor="document">
+              <p>Documento</p>
+              <input
+                id="document"
+                className="w-full file:mr-4 file:bg-green-100 file:border-none file:p-2 file:rounded-lg hover:file:bg-green-200 hover:file:cursor-pointer"
+                type="file"
+                accept="application/pdf, application/msword"
+                {...register("file")}
+              />
+            </label>
+            <p className="py-2 text-gray-600">
+              .pdf o .docx de menos de 10 MB.
+            </p>
+
+            {errors.file && <p>{errors.file.message}</p>}
+          </div>
+
+          <Button type="submit" width="w-full">
+            Subir
+          </Button>
+        </form>
+      </div>
     </BaseLayout>
   );
 };

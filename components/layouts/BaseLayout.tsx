@@ -1,7 +1,8 @@
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 import Head from "next/head";
-import { VStack } from "@chakra-ui/react";
-import Navbar from "../navbar";
+import dynamic from "next/dynamic";
+import { Toaster } from "react-hot-toast";
+const Navbar = dynamic(() => import("../navbar"));
 
 interface Props {
   title: string;
@@ -20,15 +21,13 @@ const BaseLayout = ({ title, children }: Props) => (
       <title>{title}</title>
     </Head>
 
-    <VStack
-      width="100%"
-      height="container.sm"
-      justifyContent="center"
-      userSelect="none"
-    >
-      <Navbar />
+    <div className="container min-h-screen flex flex-col justify-center items-center select-none mb-8">
+      <Toaster />
+      <Suspense fallback={`Loading...`}>
+        <Navbar />
+      </Suspense>
       {children}
-    </VStack>
+    </div>
   </>
 );
 
