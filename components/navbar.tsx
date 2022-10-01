@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useUser } from "../hooks/useUser";
-import { brandName, container } from "../styles/navbar.css";
+import { navbar } from "../styles/components.css";
 import Button from "./button";
 
 const Navbar = () => {
@@ -22,8 +22,8 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={container}>
-      <p className={brandName}>Resumilo.</p>
+    <nav className={navbar.container}>
+      <p className={navbar.name}>Resumilo.</p>
       {user ? (
         <Button variant="caution" onClick={signOutAction}>
           Cerrar sesión

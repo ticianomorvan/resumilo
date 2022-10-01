@@ -1,6 +1,7 @@
 import { FormEvent, useCallback, useState } from "react";
 import { Summary } from "../types/summary";
 import { toast } from "react-hot-toast";
+import { search } from "../styles/components.css";
 import Button from "./button";
 import Link from "next/link";
 
@@ -28,9 +29,9 @@ const Search = () => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-4 max-w-sm">
+        <div className={search.container}>
           <input
-            className="rounded-md border-[1px] border-black p-2 focus-visible:outline-green-500"
+            className={search.input}
             placeholder={`Ej: "Partidos políticos"`}
             onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
             value={searchQuery}

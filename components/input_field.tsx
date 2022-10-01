@@ -1,4 +1,5 @@
 import { FieldError, UseFormRegister } from "react-hook-form";
+import { inputField } from "../styles/components.css";
 
 interface Props {
   inputName: "title" | "description" | "topic";
@@ -19,21 +20,17 @@ export default function InputField({
   error,
 }: Props) {
   return (
-    <div className="my-4">
+    <div className={inputField.container}>
       <label htmlFor={inputName}>
-        <p className="text-lg py-2">{label}</p>
+        <p className={inputField.label}>{label}</p>
         <input
-          className="w-full p-1 rounded-md border-black border-[1px] focus:outline-green-500"
+          className={inputField.input}
           type="text"
           {...register(inputName)}
         />
       </label>
 
-      {error && (
-        <p className="bg-red-100 text-red-900 p-2 my-2 rounded-lg">
-          {error.message}
-        </p>
-      )}
+      {error && <p className={inputField.error}>{error.message}</p>}
     </div>
   );
 }

@@ -9,7 +9,8 @@ export const vars = createGlobalTheme('html', {
     'primary-500': '#4CD156',
     'primary-600': '#26C633',
     'primary-700': '#00BA0F',
-    error: '#E91A1A',
+    "error-dark": '#E91A1A',
+    "error-light": "#FFB7B7",
     warning: '#F1D442',
     info: '#41A0F2'
   },
