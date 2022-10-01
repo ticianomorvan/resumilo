@@ -1,8 +1,8 @@
 import { FormEvent, useCallback, useState } from "react";
 import { Summary } from "../types/summary";
 import { toast } from "react-hot-toast";
-import SummaryModal from "./summary";
 import Button from "./button";
+import Link from "next/link";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -30,6 +30,7 @@ const Search = () => {
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 max-w-sm">
           <input
+            className="rounded-md border-[1px] border-black p-2 focus-visible:outline-green-500"
             placeholder={`Ej: "Partidos políticos"`}
             onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
             value={searchQuery}
@@ -37,22 +38,12 @@ const Search = () => {
           <Button type="submit">Buscar</Button>
         </div>
       </form>
-      {summaries.length > 0 && (
-        <div className="grid gap-4">
-          {summaries.map((summary) => (
-            <SummaryModal
-              key={summary.id}
-              id={summary.id}
-              title={summary.title}
-              description={summary.description}
-              topic={summary.topic}
-              file_reference={summary.file_reference}
-              author_id={summary.author_id}
-              date={summary.date}
-            />
-          ))}
-        </div>
-      )}
+      {summaries.length > 0 &&
+        summaries.map(({ id, title }) => (
+          <Link key={id} href={`/resumenes/${encodeURIComponent(id)}`}>
+            {title}
+          </Link>
+        ))}
     </>
   );
 };

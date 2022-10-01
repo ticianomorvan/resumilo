@@ -21,12 +21,14 @@ const BaseLayout = ({ title, children }: Props) => (
       <title>{title}</title>
     </Head>
 
-    <div className="container min-h-screen flex flex-col justify-center items-center select-none mb-8">
+    <div className="container select-none mb-12 lg:mb-0">
       <Toaster />
       <Suspense fallback={`Loading...`}>
         <Navbar />
       </Suspense>
-      {children}
+      <main className="h-screen w-screen flex flex-col items-center justify-center">
+        {children}
+      </main>
     </div>
   </>
 );

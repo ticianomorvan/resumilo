@@ -2,7 +2,6 @@ import { NextPage } from "next";
 
 import Link from "next/link";
 import Head from "next/head";
-import SummaryModal from "../components/summary";
 
 const Home: NextPage = () => {
   return (
@@ -21,16 +20,6 @@ const Home: NextPage = () => {
       <Link href="resumenes">
         <button className="button">Resúmenes</button>
       </Link>
-
-      <SummaryModal
-        id="2222"
-        title="titu"
-        description="desc"
-        topic="topc"
-        file_reference="image"
-        author_id="2122"
-        date="2022-05-23"
-      />
     </>
   );
 };

@@ -18,14 +18,14 @@ const Profile = ({ user }: Props) => {
         width={120}
         height={120}
       />
-      <Text>{user.name}</Text>
-      <Text>{user.email}</Text>
+      <p>{user.name}</p>
+      <p>{user.email}</p>
       {user.summaries.length > 0 ? (
         user.summaries.map((summary) => (
-          <Text key={summary.title}>{summary.title}</Text>
+          <p key={summary.title}>{summary.title}</p>
         ))
       ) : (
-        <Text>Este usuario no tiene ningún resumen.</Text>
+        <p>Este usuario no tiene ningún resumen.</p>
       )}
     </BaseLayout>
   );

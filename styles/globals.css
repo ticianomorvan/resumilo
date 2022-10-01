@@ -33,31 +33,3 @@ h2 {
 .button.warning.ghost {
   @apply bg-red-200 text-red-900;
 }
-
-.dialog-overlay {
-  animation-name: ShowDialog;
-  animation-duration: .25s;
-}
-
-.dialog-content {
-  animation-name: ShowContent;
-  animation-duration: .25s;
-}
-
-@keyframes ShowDialog {
-  from {
-    opacity: 0
-  }
-  to {
-    opacity: 100%
-  }
-}
-
-@keyframes ShowContent {
-  from {
-    transform: scale(0.85);
-  }
-  to {
-    transform: scale(1);
-  }
-}

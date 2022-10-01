@@ -12,6 +12,7 @@
   "dependencies": {
     "@fontsource/jost": "^4.5.11",
     "@hookform/resolvers": "^2.9.8",
+    "@radix-ui/react-accordion": "^1.0.0",
     "@radix-ui/react-dialog": "^1.0.0",
     "date-fns": "^2.29.3",
     "firebase": "^9.10.0",
