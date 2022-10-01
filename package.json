@@ -7,13 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "preview": "pnpm run build && pnpm run start"
+    "preview": "yarn build && yarn start"
   },
   "dependencies": {
     "@fontsource/jost": "^4.5.11",
     "@hookform/resolvers": "^2.9.8",
-    "@radix-ui/react-accordion": "^1.0.0",
-    "@radix-ui/react-dialog": "^1.0.0",
+    "@vanilla-extract/css": "^1.9.1",
     "date-fns": "^2.29.3",
     "firebase": "^9.10.0",
     "framer-motion": "^7.3.6",
@@ -24,17 +23,16 @@
     "react-hook-form": "^7.36.1",
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.4.0",
+    "sanitize.css": "^13.0.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/node": "18.7.19",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
-    "autoprefixer": "^10.4.12",
+    "@vanilla-extract/next-plugin": "^2.1.1",
     "eslint": "8.23.1",
     "eslint-config-next": "12.3.1",
-    "postcss": "^8.4.17",
-    "tailwindcss": "^3.1.8",
     "typescript": "4.8.3"
   },
   "description": "Resumilo is a digital platform that allows its users to submit their summaries and get awarded.",

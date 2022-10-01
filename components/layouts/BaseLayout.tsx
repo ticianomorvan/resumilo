@@ -2,6 +2,7 @@ import { ReactNode, Suspense } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { Toaster } from "react-hot-toast";
+import { container } from "../../styles/layout.css";
 const Navbar = dynamic(() => import("../navbar"));
 
 interface Props {
@@ -21,14 +22,12 @@ const BaseLayout = ({ title, children }: Props) => (
       <title>{title}</title>
     </Head>
 
-    <div className="container select-none mb-12 lg:mb-0">
+    <div className={container}>
       <Toaster />
       <Suspense fallback={`Loading...`}>
         <Navbar />
       </Suspense>
-      <main className="h-screen w-screen flex flex-col items-center justify-center">
-        {children}
-      </main>
+      <main>{children}</main>
     </div>
   </>
 );

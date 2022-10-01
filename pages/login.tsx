@@ -50,7 +50,11 @@ const LogIn: NextPage = () => {
     }
   };
 
-  return <Button onClick={createUserAction}>Log In</Button>;
+  return (
+    <Button variant="primary" onClick={createUserAction}>
+      Log In
+    </Button>
+  );
 };
 
 export default LogIn;

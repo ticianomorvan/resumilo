@@ -2,6 +2,7 @@ import { NextPage } from "next";
 
 import Link from "next/link";
 import Head from "next/head";
+import Button from "../components/button";
 
 const Home: NextPage = () => {
   return (
@@ -15,10 +16,9 @@ const Home: NextPage = () => {
         <title>Resumilo, un hogar para tus resúmenes.</title>
       </Head>
       <h1>Resumilo</h1>
-      <h2 className="text-4xl">Un hogar para tus resúmenes</h2>
-
+      <h2>Un hogar para tus resúmenes</h2>
       <Link href="resumenes">
-        <button className="button">Resúmenes</button>
+        <Button variant="ghost">Resúmenes</Button>
       </Link>
     </>
   );
