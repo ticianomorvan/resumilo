@@ -1,17 +1,32 @@
-import { Button, useToast } from "@chakra-ui/react";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  browserPopupRedirectResolver,
+} from "firebase/auth";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { errorToast } from "../lib/utils";
+import { firebaseAuth } from "../lib/firebase";
+import { toast } from "react-hot-toast";
+import Button from "../components/button";
 
 const LogIn: NextPage = () => {
-  const toast = useToast();
   const router = useRouter();
 
   const createUserAction = async () => {
-    const { googleSignIn, isAlreadyCreated, createUserDoc } = await import(
-      "../lib/firebase"
+    const { isAlreadyCreated, createUserDoc } = await import("../lib/firebase");
+
+    const auth = firebaseAuth;
+    const provider = new GoogleAuthProvider();
+
+    const result = await signInWithPopup(
+      auth,
+      provider,
+      browserPopupRedirectResolver
     );
 
+    return toast(`Iniciaste sesión como ${result.user.displayName}`);
+
+    /*
     googleSignIn()
       .then(async ({ user }) => {
         const isInDatabase = await isAlreadyCreated(user.uid);
@@ -39,6 +54,7 @@ const LogIn: NextPage = () => {
         }
       })
       .catch((error) => toast(errorToast(error)));
+      */
   };
 
   return <Button onClick={createUserAction}>Log In</Button>;
