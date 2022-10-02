@@ -1,14 +1,23 @@
-import { onAuthStateChanged, User, } from "firebase/auth"
+import { User } from "pocketbase"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { firebaseAuth } from "../lib/firebase"
+import { client } from "../lib/pocketbase"
 
 export const useUser = () => {
   const [user, setUser] = useState<User>()
+  const router = useRouter()
 
   useEffect(() => {
-    const auth = firebaseAuth
-    onAuthStateChanged(auth, async (user) => user ? setUser(user) : setUser(undefined))
-  }, [])
+    const { authStore } = client
+    const { model, isValid } = authStore
+    if (!model && !isValid && (!router.pathname.includes('login') && !router.pathname.includes('signup'))) {
+      router.replace('/login')
+    } else if (model && isValid && (router.pathname.includes('login') || router.pathname.includes('signup'))) {
+      router.replace('/')
+    } else {
+      setUser(model as User)
+    }
+  }, [router])
 
   return { user }
 }

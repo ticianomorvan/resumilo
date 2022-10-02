@@ -1,7 +1,8 @@
-import Link from "next/link";
+import { client } from "lib/pocketbase";
 import { useRouter } from "next/router";
 import { useUser } from "../hooks/useUser";
 import { navbar } from "../styles/components.css";
+import { toast } from "react-hot-toast";
 import Button from "./button";
 
 const Navbar = () => {
@@ -9,16 +10,9 @@ const Navbar = () => {
   const router = useRouter();
 
   const signOutAction = async () => {
-    const { closeSession } = await import("../lib/firebase");
-
-    closeSession()
-      .then(() => {
-        alert("cerraste sesión");
-      })
-      .finally(() => {
-        if (router.pathname.endsWith("/")) return router.reload();
-        return router.push("/");
-      });
+    client.authStore.clear();
+    toast.success("Cerraste sesión correctamente.");
+    setTimeout(() => router.push("/login"), 2000);
   };
 
   return (
@@ -29,9 +23,9 @@ const Navbar = () => {
           Cerrar sesión
         </Button>
       ) : (
-        <Link href="/login">
-          <Button variant="ghost">Iniciar sesión</Button>
-        </Link>
+        <Button variant="ghost" onClick={() => router.push("/login")}>
+          Iniciar sesión
+        </Button>
       )}
     </nav>
   );

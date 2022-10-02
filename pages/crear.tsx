@@ -15,8 +15,9 @@ import { useUser } from "../hooks/useUser";
 // Components
 import BaseLayout from "../components/layouts/BaseLayout";
 import Link from "next/link";
-import InputField from "../components/input_field";
 import Button from "../components/button";
+import { FieldError, UseFormRegister } from "react-hook-form";
+import { inputField } from "../styles/components.css";
 
 const TEN_MEGABYTES_LIMIT = 10000000; // 10 MB to Byte conversion
 
@@ -29,6 +30,35 @@ const validationSchema = Yup.object().shape({
   mercado_pago: Yup.string().notRequired(),
   file_reference: Yup.array().length(1, "Se requiere un archivo .pdf o .docx"),
 });
+
+interface Props {
+  inputName: "title" | "description" | "topic";
+  label: string;
+  error?: FieldError;
+  register: UseFormRegister<{
+    title: string;
+    description: string;
+    topic: string;
+    file: FileList;
+  }>;
+}
+
+function InputField({ inputName, label, register, error }: Props) {
+  return (
+    <div className={inputField.container}>
+      <label htmlFor={inputName}>
+        <p className={inputField.label}>{label}</p>
+        <input
+          className={inputField.input}
+          type="text"
+          {...register(inputName)}
+        />
+      </label>
+
+      {error && <p className={inputField.error}>{error.message}</p>}
+    </div>
+  );
+}
 
 interface Inputs {
   title: string;
@@ -163,9 +193,7 @@ const Create = () => {
             {errors.file && <p>{errors.file.message}</p>}
           </div>
 
-          <Button type="submit" width="w-full">
-            Subir
-          </Button>
+          <Button type="submit">Subir</Button>
         </form>
       </div>
     </BaseLayout>
