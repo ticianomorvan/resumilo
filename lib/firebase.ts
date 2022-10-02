@@ -4,6 +4,7 @@ import { collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where } 
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { Summary } from "../types/summary";
 import { User } from "../types/user";
+import { filterIndexes, getLocalIndexes, storeSummaryIndexes } from "./utils";
 
 const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -77,22 +78,39 @@ export const createSummaryDoc = async (
 export const filterSummaries = async (search: string) => {
   try {
     const firestore = await getCurrentFirestore()
-    const querySnapshot = query(collection(firestore, "summaries"))
-    const documents = await getDocs(querySnapshot)
-    let matchingDocuments: Summary[] = []
+    const localIndexes = getLocalIndexes()
 
-    for (let i = 0; i < documents.size; i++) {
-      const data = documents.docs[i].data() as Summary
-      if (
-        (data.title.toLowerCase().includes(search)) ||
-        (data.description.toLowerCase().includes(search)) ||
-        (data.topic.toLowerCase().includes(search))
-      ) {
-        matchingDocuments = [...matchingDocuments, data]
+    if (!localIndexes) {
+      const querySnapshot = query(collection(firestore, "summaries"))
+      const documents = await getDocs(querySnapshot)
+
+      let matchingDocuments: Summary[] = []
+
+      for (let i = 0; i < documents.size; i++) {
+        const data = documents.docs[i].data() as Summary
+        storeSummaryIndexes(data) // Store indexes locally for caching.
+
+        if (
+          (data.title.toLowerCase().includes(search)) ||
+          (data.description.toLowerCase().includes(search)) ||
+          (data.topic.toLowerCase().includes(search))
+        ) {
+          matchingDocuments = [...matchingDocuments, data]
+        }
       }
-    }
 
-    return matchingDocuments
+      return matchingDocuments
+    } else {
+      const matchingIds = filterIndexes(localIndexes, search)
+      let summaries: Summary[] = []
+      console.log(matchingIds)
+      for (let i = 0; i < matchingIds.length; i++) {
+        const document = await getDoc(doc(firestore, "summaries", matchingIds[i]))
+        const data = document.data() as Summary
+        summaries = [...summaries, data]
+      }
+      return summaries
+    }
   } catch (error: unknown) {
     throw new Error(formatFirebaseError(error))
   }
