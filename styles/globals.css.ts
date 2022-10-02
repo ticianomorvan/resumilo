@@ -13,3 +13,7 @@ globalStyle('h2', {
   fontSize: vars.text.lg,
   fontWeight: 'normal'
 })
+
+globalStyle('input[type="file"]', {
+  display: "flex",
+})

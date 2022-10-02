@@ -1,5 +1,5 @@
 import { FieldError, UseFormRegister } from "react-hook-form";
-import { inputField } from "../styles/components.css";
+import { creationInputStyles } from "styles/components.css";
 
 interface Props {
   inputName: "title" | "description" | "topic";
@@ -13,24 +13,24 @@ interface Props {
   }>;
 }
 
-export default function InputField({
+export default function CreationInput({
   inputName,
   label,
   register,
   error,
 }: Props) {
   return (
-    <div className={inputField.container}>
+    <div className={creationInputStyles.container}>
       <label htmlFor={inputName}>
-        <p className={inputField.label}>{label}</p>
+        <p className={creationInputStyles.label}>{label}</p>
         <input
-          className={inputField.input}
+          className={creationInputStyles.input}
           type="text"
           {...register(inputName)}
         />
       </label>
 
-      {error && <p className={inputField.error}>{error.message}</p>}
+      {error && <p className={creationInputStyles.error}>{error.message}</p>}
     </div>
   );
 }

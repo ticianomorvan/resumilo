@@ -12,7 +12,11 @@ export const vars = createGlobalTheme('html', {
     "error-dark": '#E91A1A',
     "error-light": "#FFB7B7",
     warning: '#F1D442',
-    info: '#41A0F2'
+    info: '#41A0F2',
+    "gray-50": "#0042",
+    "gray-100": '#0045',
+    "gray-200": "#004a",
+    "gray-300": '#002e'
   },
   spacing: {
     xs: '0.25em',
@@ -30,10 +34,10 @@ export const vars = createGlobalTheme('html', {
   },
   fontFamily: `'Jost', system-ui, sans-serif`,
   text: {
-    'xs': '0.5em',
-    'sm': '1em',
-    'md': '1.5em',
-    'lg': '2.25em',
-    'xl': '3em'
-  }
+    xs: '0.85em',
+    sm: '1em',
+    md: '1.5em',
+    lg: '2.25em',
+    xl: '3em'
+  },
 })
