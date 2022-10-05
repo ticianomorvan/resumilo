@@ -1,7 +1,8 @@
+import { ReactNode } from "react";
 import { buttonVariants } from "../styles/components/button.css";
 
 interface Props {
-  children: string;
+  children: string | ReactNode;
   variant?: "primary" | "ghost" | "caution";
   type?: "button" | "reset" | "submit";
   otherClasses?: string;

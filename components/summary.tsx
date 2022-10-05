@@ -8,6 +8,7 @@ import {
 } from "styles/components/summary.css";
 import { formatDistance, parseISO } from "date-fns";
 import esLocale from "date-fns/locale/es";
+import { useRouter } from "next/router";
 
 interface Props {
   data: SummaryRecord;
@@ -20,8 +21,12 @@ const transformDate = (raw: string) =>
   });
 
 export default function SummaryItem({ data }: Props) {
+  const router = useRouter();
   return (
-    <div className={container}>
+    <div
+      className={container}
+      onClick={() => router.push(`/resumenes/${encodeURIComponent(data.id)}`)}
+    >
       <span className={information}>
         <p className={title}>{data.title}</p>
         <p className={date}>{transformDate(data.date)}</p>

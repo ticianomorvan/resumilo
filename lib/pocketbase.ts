@@ -36,6 +36,15 @@ export const updateUserProfile = async (id: string, data: UserProfile) => {
   }
 }
 
+export const getUserById = async (id: string) => {
+  try {
+    const result = await client.users.getOne(id)
+    return JSON.stringify(result)
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
 export const getSerializedSummaries: () => Promise<string> = async () => {
   try {
     const result = client.records.getList('summaries', 1, 25, { sort: '-created' }).then((data) => {
@@ -48,4 +57,17 @@ export const getSerializedSummaries: () => Promise<string> = async () => {
   } catch (error: any) {
     throw new Error(error)
   }
+}
+
+export const getSummaryById = async (id: string) => {
+  try {
+    const result = await client.records.getOne('summaries', id)
+    return JSON.stringify(result)
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
+export const getSummaryDocument = (record: string, file: string) => {
+  return `${process.env.NEXT_PUBLIC_POCKETBASE}/api/files/summaries/${record}/${file}`
 }
