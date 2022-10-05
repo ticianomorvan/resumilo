@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast";
 
 // Components
 import { FaEye } from "react-icons/fa";
-import BaseLayout from "components/layouts/BaseLayout";
+import BaseLayout from "components/layouts/layout";
 import Button from "../components/button";
 
 const validationSchema = object().shape({
@@ -49,6 +49,7 @@ const SignUp = () => {
       const data = {
         email: email,
         password: password,
+        name: "HOLAAA",
       };
       fetch("/api/users/create", {
         method: "POST",

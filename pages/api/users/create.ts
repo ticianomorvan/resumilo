@@ -3,7 +3,7 @@ import { SHA256, enc } from "crypto-js"
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { email, password } = JSON.parse(req.body) as { email: string, password: string }
+  const { email, password } = JSON.parse(req.body) as { email: string, password: string, name: string }
   const passwordHash = SHA256(password)
 
   try {

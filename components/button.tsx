@@ -1,4 +1,4 @@
-import { buttonVariants } from "../styles/components.css";
+import { buttonVariants } from "../styles/components/button.css";
 
 interface Props {
   children: string;

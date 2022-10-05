@@ -1,4 +1,4 @@
-import { badge } from "../styles/components.css";
+import { badge } from "../styles/components/badge.css";
 
 interface Props {
   label: string;

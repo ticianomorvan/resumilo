@@ -1,10 +1,12 @@
 import Head from "next/head";
-import Navbar from "components/navbar";
+import { container, primaryCta } from "styles/pages/index.css";
+import Button from "components/button";
+import { useRouter } from "next/router";
 
 const Home = () => {
+  const router = useRouter();
   return (
-    <>
-      <Navbar />
+    <div className={container}>
       <Head>
         <meta charSet="utf-8" />
         <meta
@@ -15,7 +17,13 @@ const Home = () => {
       </Head>
       <h1>Resumilo</h1>
       <h2>Un hogar para tus resúmenes</h2>
-    </>
+      <Button
+        otherClasses={primaryCta}
+        onClick={() => router.push("/resumenes")}
+      >
+        Resúmenes
+      </Button>
+    </div>
   );
 };
 

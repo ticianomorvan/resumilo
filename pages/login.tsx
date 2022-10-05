@@ -7,7 +7,7 @@ import { useState } from "react";
 
 // Components
 import { FaEye } from "react-icons/fa";
-import BaseLayout from "components/layouts/BaseLayout";
+import BaseLayout from "components/layouts/layout";
 import Button from "../components/button";
 import Link from "next/link";
 import { client } from "lib/pocketbase";

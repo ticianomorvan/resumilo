@@ -19,7 +19,7 @@ const BaseLayout = ({ title, children }: Props) => (
       />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="icon" href="/favicon.ico" />
-      <title>{title}</title>
+      <title>{`${title} | Resumilo`}</title>
     </Head>
 
     <div className={container}>

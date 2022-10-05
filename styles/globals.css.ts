@@ -2,11 +2,11 @@ import { globalStyle } from "@vanilla-extract/css"
 import { vars } from "./theme.css"
 
 globalStyle('html', {
-  fontFamily: `'Jost', system-ui, sans-serif`
+  fontFamily: vars.fontFamily
 })
 
 globalStyle('h1', {
-  fontSize: vars.text.xl
+  fontSize: vars.text.xl,
 })
 
 globalStyle('h2', {

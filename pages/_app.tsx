@@ -1,6 +1,6 @@
 import { AppProps } from "next/app";
 
-import "@fontsource/jost";
+import "@fontsource/inter";
 import "../styles/globals.css.ts";
 import "sanitize.css";
 

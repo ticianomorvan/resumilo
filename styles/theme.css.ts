@@ -23,7 +23,8 @@ export const vars = createGlobalTheme('html', {
     sm: '0.75em',
     md: '1.5em',
     lg: '2em',
-    xl: '4em'
+    xl: '6em',
+    xxl: '8em'
   },
   rounded: {
     sm: '0.5em',
@@ -32,7 +33,7 @@ export const vars = createGlobalTheme('html', {
     xl: '2em',
     full: '9999px'
   },
-  fontFamily: `'Jost', system-ui, sans-serif`,
+  fontFamily: `'Inter', system-ui, sans-serif`,
   text: {
     xs: '0.85em',
     sm: '1em',
@@ -40,4 +41,16 @@ export const vars = createGlobalTheme('html', {
     lg: '2.25em',
     xl: '3em'
   },
+  size: {
+    xs: '10%',
+    sm: '25%',
+    md: '45%',
+    lg: '60%',
+    xl: '80%',
+    full: '100%',
+    screen: {
+      width: '100vw',
+      height: '100vh'
+    }
+  }
 })

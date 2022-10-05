@@ -1,7 +1,7 @@
 import { client } from "lib/pocketbase";
 import { useRouter } from "next/router";
 import { useUser } from "../hooks/useUser";
-import { navbar } from "../styles/components.css";
+import { navbar } from "../styles/components/navbar.css";
 import { toast } from "react-hot-toast";
 import Button from "./button";
 

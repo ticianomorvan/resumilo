@@ -1,10 +1,12 @@
 import { style } from "@vanilla-extract/css"
+import { vars } from "./theme.css"
 
 export const container = style({
-  width: '100vw',
-  marginBlock: '6em',
+  width: vars.size.screen.width,
+  minHeight: vars.size.screen.height,
+  marginBlock: vars.spacing.xl,
   display: 'flex',
   flexDirection: 'column',
-  minHeight: '100vh',
+  alignItems: 'center',
   userSelect: 'none',
 })

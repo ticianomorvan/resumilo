@@ -19,13 +19,13 @@ import {
   notLoggedIn,
   uploadButton,
   uploadMessage,
-} from "styles/crear.css";
+} from "styles/pages/crear.css";
 
 // Components
-import BaseLayout from "../components/layouts/BaseLayout";
+import BaseLayout from "../components/layouts/layout";
 import Link from "next/link";
 import Button from "../components/button";
-import CreationInput from "components/forms/creation_input";
+import Input from "components/forms/input";
 import { createSummary } from "lib/pocketbase";
 
 const TEN_MEBIBYTES_LIMIT = 10485760; // 10 MB to Byte conversion
@@ -88,7 +88,7 @@ const Create = () => {
       const summary: Summary = {
         title: title,
         description: description,
-        author: user.profile?.id!,
+        author: user.id,
 
         // Format the date to be YEAR-MONTH-DAY HOUR:MINUTE:SECOND
         date: format(new Date(), "yyyy-MM-dd kk:mm:ss"),
@@ -112,22 +112,22 @@ const Create = () => {
         <h1 className={header}>Creá un resumen</h1>
 
         <form className={formContainer} onSubmit={handleSubmit(onSubmit)}>
-          <CreationInput
-            inputName="title"
+          <Input
+            name="title"
             label="Título"
             register={register}
             error={errors.title}
           />
 
-          <CreationInput
-            inputName="description"
+          <Input
+            name="description"
             label="Descripción"
             register={register}
             error={errors.description}
           />
 
-          <CreationInput
-            inputName="topic"
+          <Input
+            name="topic"
             label="Tema"
             register={register}
             error={errors.topic}

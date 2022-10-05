@@ -1,14 +1,5 @@
-import { keyframes, style, styleVariants } from "@vanilla-extract/css"
-import { vars } from "./theme.css"
-
-export const badge = style({
-  color: vars.color["primary-700"],
-  backgroundColor: vars.color["primary-100"],
-  padding: vars.spacing.xs,
-  borderRadius: vars.rounded.lg
-})
-
-// Search
+import { style } from "@vanilla-extract/css";
+import { vars } from "styles/theme.css";
 
 export const search = {
   container: style({
