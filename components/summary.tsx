@@ -1,18 +1,32 @@
-import { Summary } from "types/summary";
+import { SummaryRecord } from "types/summary";
 import Badge from "./badge";
-import { container } from "styles/components/summary.css";
+import {
+  container,
+  date,
+  information,
+  title,
+} from "styles/components/summary.css";
+import { formatDistance, parseISO } from "date-fns";
+import esLocale from "date-fns/locale/es";
 
 interface Props {
-  data: Summary;
+  data: SummaryRecord;
 }
+
+const transformDate = (raw: string) =>
+  formatDistance(parseISO(raw), new Date(), {
+    addSuffix: true,
+    locale: esLocale,
+  });
 
 export default function SummaryItem({ data }: Props) {
   return (
     <div className={container}>
-      <p>{data.title}</p>
-      <p>{data.date}</p>
+      <span className={information}>
+        <p className={title}>{data.title}</p>
+        <p className={date}>{transformDate(data.date)}</p>
+      </span>
       <Badge label={data.topic} />
-      <p>{data.author}</p>
     </div>
   );
 }

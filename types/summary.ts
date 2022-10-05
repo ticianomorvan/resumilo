@@ -1,4 +1,4 @@
-import { User } from "pocketbase";
+import { Record, User } from "pocketbase";
 
 export interface Summary {
   title: string,
@@ -9,12 +9,11 @@ export interface Summary {
   author: string,
 }
 
-export interface SummaryRecord {
-  id: string;
+export interface SummaryRecord extends Record {
   title: string;
   description: string;
-  date: string;
   topic: string;
-  author: User;
+  date: string;
+  author: string;
   document: string;
 }

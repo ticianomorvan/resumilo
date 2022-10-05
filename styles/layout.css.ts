@@ -3,7 +3,7 @@ import { vars } from "./theme.css"
 
 export const container = style({
   width: vars.size.screen.width,
-  minHeight: vars.size.screen.height,
+  maxHeight: vars.size.screen.height,
   marginBlock: vars.spacing.xl,
   display: 'flex',
   flexDirection: 'column',

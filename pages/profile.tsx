@@ -1,12 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import Button from "components/button";
-import Input from "components/forms/input";
-import BaseLayout from "components/layouts/layout";
 import { useUser } from "hooks/useUser";
 import { updateUserProfile } from "lib/pocketbase";
 import { useForm, SubmitHandler } from "react-hook-form";
-import toast from "react-hot-toast";
 import { mixed, object, string } from "yup";
+import Button from "components/button";
+import Input from "components/forms/input";
+import BaseLayout from "components/layouts/layout";
+import toast from "react-hot-toast";
 
 interface Inputs {
   name: string;

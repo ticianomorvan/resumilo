@@ -1,5 +1,5 @@
 import Pocketbase, { Record, User } from "pocketbase";
-import { Summary } from "types/summary";
+import { Summary, SummaryRecord } from "types/summary";
 
 export const client = new Pocketbase(process.env.NEXT_PUBLIC_POCKETBASE)
 
@@ -36,33 +36,10 @@ export const updateUserProfile = async (id: string, data: UserProfile) => {
   }
 }
 
-interface SummaryRecord extends Record {
-  title: string;
-  description: string;
-  topic: string;
-  date: string;
-  author: string;
-  document: string;
-}
-
 export const getSerializedSummaries: () => Promise<string> = async () => {
   try {
     const result = client.records.getList('summaries', 1, 25, { sort: '-created' }).then((data) => {
       const records = data.items as SummaryRecord[]
-
-      records.map(async (record) => {
-        const author = await client.users.getOne(record.author)
-        author ? console.log(JSON.stringify(author)) : console.log('B')
-        return {
-          id: record.id,
-          title: record.title,
-          description: record.description,
-          topic: record.topic,
-          date: record.date,
-          document: record.document,
-          author: author.email
-        }
-      })
 
       return records
     })
