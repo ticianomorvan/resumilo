@@ -1,4 +1,4 @@
-import { SummaryRecord } from "types/summary";
+import { Summary } from "types/summary";
 import Badge from "./badge";
 import {
   container,
@@ -11,7 +11,7 @@ import esLocale from "date-fns/locale/es";
 import { useRouter } from "next/router";
 
 interface Props {
-  data: SummaryRecord;
+  data: Summary;
 }
 
 const transformDate = (raw: string) =>
