@@ -6,3 +6,8 @@ export const downloadButton = style({
   gap: vars.spacing.sm,
   alignItems: "center",
 })
+
+export const summariesContainer = style({
+  display: "grid",
+  rowGap: vars.spacing.sm
+})

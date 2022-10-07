@@ -1,6 +1,7 @@
 import { Record, User } from "pocketbase";
 
 export interface Summary {
+  id: string,
   title: string,
   description: string,
   topic: string,

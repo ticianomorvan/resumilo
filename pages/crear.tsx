@@ -86,6 +86,7 @@ const Create = () => {
       });
     } else {
       const summary: Summary = {
+        id: "", // Leaving it blank will tell Pocketbase to create a random ID.
         title: title,
         description: description,
         author: user.id,

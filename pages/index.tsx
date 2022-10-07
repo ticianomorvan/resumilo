@@ -1,7 +1,7 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { container, primaryCta } from "styles/pages/index.css";
 import Button from "components/button";
-import { useRouter } from "next/router";
 
 const Home = () => {
   const router = useRouter();

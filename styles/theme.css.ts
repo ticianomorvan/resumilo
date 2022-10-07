@@ -31,6 +31,7 @@ export const vars = createGlobalTheme('html', {
     md: '0.75em',
     lg: '1.25em',
     xl: '2em',
+    half: "50%",
     full: '9999px'
   },
   fontFamily: `'Inter', system-ui, sans-serif`,

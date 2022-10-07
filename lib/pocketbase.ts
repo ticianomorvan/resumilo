@@ -1,4 +1,4 @@
-import Pocketbase, { Record, User } from "pocketbase";
+import Pocketbase from "pocketbase";
 import { Summary, SummaryRecord } from "types/summary";
 
 export const client = new Pocketbase(process.env.NEXT_PUBLIC_POCKETBASE)
@@ -45,15 +45,17 @@ export const getUserById = async (id: string) => {
   }
 }
 
-export const getSerializedSummaries: () => Promise<string> = async () => {
+export const getSerializedSummaries = async () => {
   try {
-    const result = client.records.getList('summaries', 1, 25, { sort: '-created' }).then((data) => {
-      const records = data.items as SummaryRecord[]
-
-      return records
+    const result = await client.records.getList('summaries', 1, 25, { sort: '-created' })
+    const data = result.items.map((record) => {
+      const { id, author, title, description, topic, date, document } = record as SummaryRecord
+      return {
+        id, author, title, description, topic, date, document
+      }
     })
 
-    return JSON.stringify(await result)
+    return data
   } catch (error: any) {
     throw new Error(error)
   }
@@ -61,8 +63,21 @@ export const getSerializedSummaries: () => Promise<string> = async () => {
 
 export const getSummaryById = async (id: string) => {
   try {
-    const result = await client.records.getOne('summaries', id)
-    return JSON.stringify(result)
+    const {
+      id: recordId, title, description, topic, date, document, author
+    } = await client.records.getOne('summaries', id) as SummaryRecord
+
+    const data: Summary = {
+      id: recordId,
+      title,
+      description,
+      topic,
+      date,
+      document,
+      author
+    }
+
+    return data
   } catch (error: any) {
     throw new Error(error)
   }
