@@ -1,22 +1,29 @@
-import { NextPage } from "next";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { container, primaryCta } from "styles/pages/index.css";
+import Button from "components/button";
 
-import { Button, Heading } from "@chakra-ui/react";
-import Link from "next/link";
-
-const Home: NextPage = () => {
+const Home = () => {
+  const router = useRouter();
   return (
-    <>
-      <Heading as="h1" fontSize="8xl">
-        Resumilo
-      </Heading>
-      <Heading as="h2" fontWeight="normal">
-        Un hogar para tus resúmenes
-      </Heading>
-
-      <Link href="resumenes">
-        <Button>Resumenes</Button>
-      </Link>
-    </>
+    <div className={container}>
+      <Head>
+        <meta charSet="utf-8" />
+        <meta
+          name="description"
+          content="Resumilo es una plataforma digital que permite a sus usuarios compartir sus apuntes de estudio y obtener una recompensa por ello."
+        />
+        <title>Resumilo, un hogar para tus resúmenes.</title>
+      </Head>
+      <h1>Resumilo</h1>
+      <h2>Un hogar para tus resúmenes</h2>
+      <Button
+        otherClasses={primaryCta}
+        onClick={() => router.push("/resumenes")}
+      >
+        Resúmenes
+      </Button>
+    </div>
   );
 };
 

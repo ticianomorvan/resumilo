@@ -1,35 +1,43 @@
-import * as Yup from "yup";
+import { Summary } from "../types/summary";
 import { format } from "date-fns";
-import { useForm, SubmitHandler } from "react-hook-form";
+import toast from "react-hot-toast";
+
+// react-hook-form
+import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { errorToast } from "../lib/utils";
-import { useUser } from "../context/user_context";
-import { nanoid } from "nanoid";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+// Hooks
+import { useRouter } from "next/router";
+import { useUser } from "../hooks/useUser";
+
+import {
+  container,
+  fileUpload,
+  formContainer,
+  header,
+  notLoggedIn,
+  uploadButton,
+  uploadMessage,
+} from "styles/pages/crear.css";
 
 // Components
-import BaseLayout from "../components/layouts/BaseLayout";
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { Summary } from "../types/summary";
+import BaseLayout from "../components/layouts/layout";
 import Link from "next/link";
+import Button from "../components/button";
+import Input from "components/forms/input";
+import { createSummary } from "lib/pocketbase";
 
-const TEN_MEGABYTES_LIMIT = 10000000; // 10 MB to Byte conversion
+const TEN_MEBIBYTES_LIMIT = 10485760; // 10 MB to Byte conversion
 
 const validationSchema = Yup.object().shape({
   title: Yup.string()
     .required("Se necesita un título.")
-    .min(5, "El título debe tener al menos cinco carácteres."),
+    .min(12, "Debe tener al menos doce carácteres."),
   description: Yup.string().notRequired(),
-  topic: Yup.string().required("Se necesita un tema."),
-  mercado_pago: Yup.string().notRequired(),
+  topic: Yup.string()
+    .required("Se necesita un tema.")
+    .max(24, "No puede tener más de 24 caracteres."),
   file_reference: Yup.array().length(1, "Se requiere un archivo .pdf o .docx"),
 });
 
@@ -45,23 +53,19 @@ const Create = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<Inputs>({ resolver: yupResolver(validationSchema) });
 
   const { user } = useUser();
-  const toast = useToast();
   const router = useRouter();
 
   if (!user)
     return (
-      <>
-        <Text>No iniciaste sesión.</Text>
+      <div className={notLoggedIn.container}>
+        <p className={notLoggedIn.message}>No iniciaste sesión.</p>
         <Link href="/login">
-          <Text color="green.500" cursor="pointer" textDecoration="underline">
-            Hazlo haciendo click aquí.
-          </Text>
+          <p className={notLoggedIn.link}>Hazlo haciendo click aquí.</p>
         </Link>
-      </>
+      </div>
     );
 
   const onSubmit: SubmitHandler<Inputs> = async ({
@@ -70,95 +74,88 @@ const Create = () => {
     file,
     topic,
   }) => {
-    const resumenDocument = file.item(0); // Get the selected file from the input.
+    const summaryDocument = file.item(0); // Get the selected file from the input.
 
-    if (!resumenDocument)
-      return toast(errorToast("Tienes que subir un archivo .docx o .pdf."));
-    if (resumenDocument.size > TEN_MEGABYTES_LIMIT)
-      return toast(errorToast("El archivo tiene que ser inferior a 10 MB."));
-
-    const { createSummaryRef, createSummaryDoc } = await import(
-      "../lib/firebase"
-    );
-
-    const { uploadBytes } = await import("firebase/storage");
-
-    const storageRef = await createSummaryRef(resumenDocument);
-
-    try {
-      const { ref } = await uploadBytes(storageRef, resumenDocument);
-
-      const summary: Summary = {
-        id: nanoid(),
-        title,
-        description,
-        topic,
-        author_id: user.uid,
-        date: format(new Date(), "yyyy-MM-dd"),
-        file_reference: ref.name,
-      };
-      await createSummaryDoc(summary);
-
-      return toast({
-        title: "¡Creaste un resumen!",
-        description: `Fue designado con la ID: ${summary.id}`,
-        status: "success",
-        duration: 2000,
-        onCloseComplete: () => router.push(`/resumenes/${summary.id}`),
+    if (!summaryDocument) {
+      toast.error("Tienes que subir un archivo .docx o .pdf.", {
+        duration: 3000,
       });
-    } catch (error: any) {
-      return toast(errorToast(error.message));
-    } finally {
-      reset({ title: "", description: "", file: undefined, topic: "" });
+    } else if (summaryDocument.size > TEN_MEBIBYTES_LIMIT) {
+      toast.error("No puedes subir un archivo de más de 10 MB", {
+        duration: 3000,
+      });
+    } else {
+      const summary: Summary = {
+        id: "", // Leaving it blank will tell Pocketbase to create a random ID.
+        title: title,
+        description: description,
+        author: user.id,
+
+        // Format the date to be YEAR-MONTH-DAY HOUR:MINUTE:SECOND
+        date: format(new Date(), "yyyy-MM-dd kk:mm:ss"),
+        document: summaryDocument,
+        topic: topic,
+      };
+
+      toast
+        .promise(createSummary(summary), {
+          loading: "Creando el resumen...",
+          error: "Hubo un error inesperado.",
+          success: "¡Resumen creado correctamente! Redirigiéndote al inicio...",
+        })
+        .then(() => setTimeout(() => router.push("/"), 2500));
     }
   };
 
   return (
     <BaseLayout title="Creación | Resumilo">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl isInvalid={Boolean(errors.title)}>
-          <FormLabel htmlFor="title">Título</FormLabel>
-          <Input id="title" {...register("title")} />
+      <div className={container}>
+        <h1 className={header}>Creá un resumen</h1>
 
-          <FormErrorMessage>
-            {errors.title && <p>{errors.title.message}</p>}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={Boolean(errors.description)}>
-          <FormLabel htmlFor="description">Descripción</FormLabel>
-          <Input id="description" {...register("description")} />
-
-          <FormErrorMessage>
-            {errors.description && <p>{errors.description.message}</p>}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={Boolean(errors.topic)}>
-          <FormLabel htmlFor="topic">Tema</FormLabel>
-          <Input id="topic" {...register("topic")} />
-
-          <FormErrorMessage>
-            {errors.topic && <p>{errors.topic.message}</p>}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={Boolean(errors.file)}>
-          <FormLabel htmlFor="document">Documento</FormLabel>
+        <form className={formContainer} onSubmit={handleSubmit(onSubmit)}>
           <Input
-            id="document"
-            type="file"
-            accept="application/pdf, application/msword"
-            {...register("file")}
+            name="title"
+            label="Título"
+            register={register}
+            error={errors.title}
           />
 
-          <FormErrorMessage>
-            {errors.file && <p>{errors.file.message}</p>}
-          </FormErrorMessage>
-        </FormControl>
+          <Input
+            name="description"
+            label="Descripción"
+            register={register}
+            error={errors.description}
+          />
 
-        <Button type="submit">Subir</Button>
-      </form>
+          <Input
+            name="topic"
+            label="Tema"
+            register={register}
+            error={errors.topic}
+          />
+
+          <div className={fileUpload.container}>
+            <p className={fileUpload.label}>Documento</p>
+            <input
+              id="document"
+              className={fileUpload.input}
+              type="file"
+              accept="application/pdf, application/msword"
+              {...register("file")}
+            />
+            <p className={fileUpload.footnote}>
+              .pdf o .docx de menos de 10 MB.
+            </p>
+
+            {errors.file && <p>{errors.file.message}</p>}
+          </div>
+
+          <p className={uploadMessage}>¿Todo listo?</p>
+          <Button otherClasses={uploadButton} type="submit" variant="primary">
+            Subir
+          </Button>
+        </form>
+      </div>
     </BaseLayout>
   );
 };
