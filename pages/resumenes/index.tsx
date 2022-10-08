@@ -1,11 +1,11 @@
-import { getSerializedSummaries } from "lib/pocketbase";
-import { GetServerSideProps } from "next";
-import { SummaryRecord } from "types/summary";
+import { getSerializedSummaries } from 'lib/pocketbase';
+import { GetServerSideProps } from 'next';
+import { SummaryRecord } from 'types/summary';
 
 // Components & Styling
-import BaseLayout from "components/layouts/layout";
-import SummaryItem from "components/summary";
-import { summariesContainer } from "styles/pages/resumenes.css";
+import BaseLayout from 'components/layouts/base';
+import SummaryItem from 'components/summary';
+import { summariesContainer, title } from 'styles/pages/resumenes.css';
 
 interface Props {
   summaries: SummaryRecord[];
@@ -14,10 +14,10 @@ interface Props {
 export default function Index({ summaries }: Props) {
   return (
     <BaseLayout title="Resúmenes">
-      <h1>Últimos resúmenes</h1>
+      <h1 className={title}>Últimos resúmenes</h1>
       <div className={summariesContainer}>
-        {summaries &&
-          summaries.map((summary) => (
+        {summaries
+          && summaries.map((summary) => (
             <SummaryItem key={summary.id} data={summary} />
           ))}
       </div>

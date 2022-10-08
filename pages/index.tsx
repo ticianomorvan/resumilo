@@ -1,9 +1,9 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { container, primaryCta } from "styles/pages/index.css";
-import Button from "components/button";
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { container, primaryCta } from 'styles/pages/index.css';
+import Button from 'components/button';
 
-const Home = () => {
+function Home() {
   const router = useRouter();
   return (
     <div className={container}>
@@ -19,12 +19,12 @@ const Home = () => {
       <h2>Un hogar para tus resúmenes</h2>
       <Button
         otherClasses={primaryCta}
-        onClick={() => router.push("/resumenes")}
+        onClick={() => router.push('/resumenes')}
       >
         Resúmenes
       </Button>
     </div>
   );
-};
+}
 
 export default Home;

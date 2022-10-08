@@ -1,5 +1,5 @@
-import { style } from "@vanilla-extract/css";
-import { vars } from "../theme.css";
+import { style } from '@vanilla-extract/css';
+import vars from '../theme.css';
 
 export const container = style({
   display: 'flex',
@@ -9,8 +9,8 @@ export const container = style({
   height: vars.size.screen.height,
   justifyContent: 'center',
   alignItems: 'center',
-})
+});
 
 export const primaryCta = style({
-  width: vars.size.full
-})
+  width: vars.size.full,
+});

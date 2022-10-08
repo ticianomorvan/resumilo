@@ -1,10 +1,12 @@
-import Button from "components/button";
-import BaseLayout from "components/layouts/layout";
-import { getSummaryById, getSummaryDocument } from "lib/pocketbase";
-import { GetServerSideProps } from "next";
-import { FaDownload } from "react-icons/fa";
-import { downloadButton } from "styles/pages/resumenes.css";
-import { SummaryRecord } from "types/summary";
+import { getSummaryById, getSummaryDocument } from 'lib/pocketbase';
+import { GetServerSideProps } from 'next';
+import { FaDownload } from 'react-icons/fa';
+import { downloadButton } from 'styles/pages/resumenes.css';
+import { SummaryRecord } from 'types/summary';
+
+// Components
+import BaseLayout from 'components/layouts/base';
+import Button from 'components/button';
 
 interface Props {
   summary: SummaryRecord;

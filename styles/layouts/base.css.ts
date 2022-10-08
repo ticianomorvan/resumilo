@@ -1,7 +1,7 @@
-import { style } from "@vanilla-extract/css"
-import { vars } from "./theme.css"
+import { style } from '@vanilla-extract/css';
+import vars from 'styles/theme.css';
 
-export const container = style({
+const container = style({
   width: vars.size.screen.width,
   maxHeight: vars.size.screen.height,
   marginBlock: vars.spacing.xl,
@@ -9,4 +9,6 @@ export const container = style({
   flexDirection: 'column',
   alignItems: 'center',
   userSelect: 'none',
-})
+});
+
+export default container;

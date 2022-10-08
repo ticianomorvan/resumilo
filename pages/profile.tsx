@@ -1,12 +1,16 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useUser } from "hooks/useUser";
-import { updateUserProfile } from "lib/pocketbase";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { mixed, object, string } from "yup";
-import Button from "components/button";
-import Input from "components/forms/input";
-import BaseLayout from "components/layouts/layout";
-import toast from "react-hot-toast";
+import { yupResolver } from '@hookform/resolvers/yup';
+import useUser from 'hooks/useUser';
+import { updateUserProfile } from 'lib/pocketbase';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { mixed, object, string } from 'yup';
+import toast from 'react-hot-toast';
+
+// Components
+import Button from 'components/button';
+import Input from 'components/forms/input';
+import BaseLayout from 'components/layouts/base';
+import { container, fileUpload } from 'styles/components/form.css';
+import { error } from 'styles/components/input.css';
 
 interface Inputs {
   name: string;
@@ -15,9 +19,9 @@ interface Inputs {
 
 const validationSchema = object().shape({
   name: string()
-    .required("Se necesita un nombre.")
-    .min(4, "Tiene que tener un mínimo de cuatro caracteres."),
-  avatar: mixed().required("Se necesita un avatar"),
+    .required('Se necesita un nombre.')
+    .min(4, 'Tiene que tener un mínimo de cuatro caracteres.'),
+  avatar: mixed().required('Se necesita un avatar'),
 });
 
 export default function Profile() {
@@ -34,19 +38,19 @@ export default function Profile() {
       avatar: data.avatar.item(0)!,
     };
 
-    if (!user || !user.profile) toast.error("No tienes una cuenta.");
+    if (!user || !user.profile) toast.error('No tienes una cuenta.');
     else {
       toast.promise(updateUserProfile(user.profile.id, newUserProfile), {
-        loading: "Actualizando tus preferencias...",
-        success: "Tus preferencias se actualizaron correctamente.",
-        error: "Hubo un error al actualizar tus preferencias.",
+        loading: 'Actualizando tus preferencias...',
+        success: 'Tus preferencias se actualizaron correctamente.',
+        error: 'Hubo un error al actualizar tus preferencias.',
       });
     }
   };
 
   return (
     <BaseLayout title="Perfil">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form className={container} onSubmit={handleSubmit(onSubmit)}>
         <Input
           label="Nombre"
           name="name"
@@ -54,19 +58,23 @@ export default function Profile() {
           register={register}
         />
 
-        <div>
-          <p>Documento</p>
+        <div className={fileUpload.container}>
+          <p className={fileUpload.label}>Foto de perfil</p>
           <input
+            className={fileUpload.input}
             id="document"
             type="file"
             accept="image/png, image/jpg"
-            {...register("avatar")}
+            {...register('avatar')}
           />
 
-          {errors.avatar && <p>{errors.avatar.message}</p>}
+          {errors.avatar && <p className={error}>{errors.avatar.message}</p>}
+          <p className={fileUpload.footnote}>
+            .JPG o .PNG de menos de 10 MB.
+          </p>
         </div>
 
-        <Button variant="ghost" type="submit">
+        <Button variant="ghost" submit>
           Actualizar
         </Button>
       </form>

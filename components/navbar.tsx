@@ -1,34 +1,37 @@
-import { client } from "lib/pocketbase";
-import { useRouter } from "next/router";
-import { useUser } from "../hooks/useUser";
-import { navbar } from "../styles/components/navbar.css";
-import { toast } from "react-hot-toast";
-import Button from "./button";
+import { client } from 'lib/pocketbase';
+import { useRouter } from 'next/router';
+import { toast } from 'react-hot-toast';
+import { container, name } from 'styles/components/navbar.css';
+import useUser from 'hooks/useUser';
+import redirect from 'lib/utils';
+import Button from './button';
 
-const Navbar = () => {
+function Navbar() {
   const { user } = useUser();
   const router = useRouter();
 
   const signOutAction = async () => {
     client.authStore.clear();
-    toast.success("Cerraste sesión correctamente.");
-    setTimeout(() => router.push("/login"), 2000);
+    toast.success('Cerraste sesión correctamente.');
+    setTimeout(() => redirect({
+      router, destination: '/login',
+    }));
   };
 
   return (
-    <nav className={navbar.container}>
-      <p className={navbar.name}>Resumilo.</p>
+    <nav className={container}>
+      <p className={name}>Resumilo.</p>
       {user ? (
         <Button variant="caution" onClick={signOutAction}>
           Cerrar sesión
         </Button>
       ) : (
-        <Button variant="ghost" onClick={() => router.push("/login")}>
+        <Button variant="ghost" onClick={() => router.push('/login')}>
           Iniciar sesión
         </Button>
       )}
     </nav>
   );
-};
+}
 
 export default Navbar;

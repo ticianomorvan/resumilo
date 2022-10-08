@@ -1,23 +1,25 @@
-import { User } from "pocketbase"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { client } from "../lib/pocketbase"
+import { User } from 'pocketbase';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { client } from '../lib/pocketbase';
 
-export const useUser = () => {
-  const [user, setUser] = useState<User>()
-  const router = useRouter()
+const useUser = () => {
+  const [user, setUser] = useState<User>();
+  const router = useRouter();
 
   useEffect(() => {
-    const { authStore } = client
-    const { model, isValid } = authStore
+    const { authStore } = client;
+    const { model, isValid } = authStore;
     if (!model && !isValid && (!router.pathname.includes('login') && !router.pathname.includes('signup'))) {
-      router.replace('/login')
+      router.replace('/login');
     } else if (model && isValid && (router.pathname.includes('login') || router.pathname.includes('signup'))) {
-      router.replace('/')
+      router.replace('/');
     } else {
-      setUser(model as User)
+      setUser(model as User);
     }
-  }, [router])
+  }, [router]);
 
-  return { user }
-}
+  return { user };
+};
+
+export default useUser;

@@ -1,25 +1,28 @@
-import { useRouter } from "next/router";
-import { toast } from "react-hot-toast";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { object, string } from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
+import { useRouter } from 'next/router';
+import { toast } from 'react-hot-toast';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { object, string } from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { authUser } from 'lib/pocketbase';
+import redirect from 'lib/utils';
+
+// Styles
+import { container, header, signUpMessage } from 'styles/components/form.css';
 
 // Components
-import { FaEye } from "react-icons/fa";
-import BaseLayout from "components/layouts/layout";
-import Button from "../components/button";
-import Link from "next/link";
-import { client } from "lib/pocketbase";
-import { User } from "pocketbase";
+import MinimalLayout from 'components/layouts/minimal';
+import Link from 'next/link';
+import Input from 'components/forms/input';
+import PasswordInput from 'components/forms/password';
+import Button from '../components/button';
 
 const validationSchema = object().shape({
   email: string()
-    .required("Se requiere un correo electrónico.")
-    .email("Lo ingresado no corresponde a un correo electrónico."),
+    .required('Se requiere un correo electrónico.')
+    .email('Lo ingresado no corresponde a un correo electrónico.'),
   password: string()
-    .required("Se requiere una contraseña.")
-    .min(8, "La contraseña debe tener al menos 8 caracteres."),
+    .required('Se requiere una contraseña.')
+    .min(8, 'La contraseña debe tener al menos 8 caracteres.'),
 });
 
 interface Inputs {
@@ -27,9 +30,7 @@ interface Inputs {
   password: string;
 }
 
-// Using valid credentials, request the API to create a session for the user and then persist it locally.
-const LogIn = () => {
-  const [isHidden, setIsHidden] = useState<boolean>(true);
+function LogIn() {
   const {
     register,
     handleSubmit,
@@ -37,56 +38,45 @@ const LogIn = () => {
   } = useForm<Inputs>({ resolver: yupResolver(validationSchema) });
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    fetch("/api/users/auth", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: new Headers({
-        "Content-Type": "application/json, charset=utf-8",
-      }),
-    }).then((response) => {
-      if (response.status === 200) {
-        response.json().then((data) => {
-          const { token, user } = data as { token: string; user: User };
-          client.authStore.save(token, user);
-          toast.success("Iniciaste sesión correctamente, redireccionándote...");
-          setTimeout(() => router.push("/"), 2000);
-        });
-      } else {
-        toast.error("Hubo un error, inténtalo de nuevo.");
-      }
-    });
+  const onSubmit: SubmitHandler<Inputs> = ({ email, password }) => {
+    toast
+      .promise(authUser(email, password), {
+        loading: 'Iniciando sesión...',
+        success: '¡Iniciaste sesión correctamente! Redirigiéndote...',
+        error: 'Hubo un error al iniciar sesión.',
+      })
+      .catch((error) => toast.error(error))
+      .finally(() => redirect({
+        router, destination: '/resumenes',
+      }));
   };
 
   return (
-    <BaseLayout title="Iniciar sesión">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label>
-          <p>Correo electrónico</p>
-          <input type="email" {...register("email")} />
+    <MinimalLayout title="Iniciar sesión">
+      <h1 className={header}>Ingresá a Resumilo</h1>
+      <form className={container} onSubmit={handleSubmit(onSubmit)}>
+        <Input
+          label="Correo electrónico"
+          name="email"
+          register={register}
+          error={errors.email}
+        />
 
-          {errors.email && <p>{errors.email.message}</p>}
-        </label>
+        <PasswordInput
+          label="Contraseña"
+          name="password"
+          register={register}
+          error={errors.password}
+        />
 
-        <span>
-          <label>
-            <p>Contraseña</p>
-            <input
-              type={isHidden ? "password" : "text"}
-              {...register("password")}
-            />
+        <Button submit wide>Entrar</Button>
 
-            {errors.password && <p>{errors.password.message}</p>}
-          </label>
-          <FaEye onClick={() => setIsHidden((c) => !c)} />
-        </span>
-
-        <Button type="submit">Entrar</Button>
-
-        <Link href="/signup">¿No tienes una cuenta?</Link>
+        <Link href="/signup">
+          <p className={signUpMessage}>¿No tienes una cuenta?</p>
+        </Link>
       </form>
-    </BaseLayout>
+    </MinimalLayout>
   );
-};
+}
 
 export default LogIn;

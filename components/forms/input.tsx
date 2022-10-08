@@ -1,5 +1,10 @@
-import { FieldError, UseFormRegister } from "react-hook-form";
-import { creationInputStyles } from "styles/components/creation_input.css";
+import { FieldError, UseFormRegister } from 'react-hook-form';
+import {
+  container,
+  input,
+  label as styledLabel,
+  error as styledError,
+} from 'styles/components/input.css';
 
 interface Props {
   name: string;
@@ -8,19 +13,21 @@ interface Props {
   register: UseFormRegister<any>;
 }
 
-export default function Input({ name, label, register, error }: Props) {
+export default function Input({
+  name, label, register, error,
+}: Props) {
   return (
-    <div className={creationInputStyles.container}>
+    <div className={container}>
       <label htmlFor={name}>
-        <p className={creationInputStyles.label}>{label}</p>
+        <p className={styledLabel}>{label}</p>
         <input
-          className={creationInputStyles.input}
+          className={input}
           type="text"
           {...register(name)}
         />
       </label>
 
-      {error && <p className={creationInputStyles.error}>{error.message}</p>}
+      {error && <p className={styledError}>{error.message}</p>}
     </div>
   );
 }

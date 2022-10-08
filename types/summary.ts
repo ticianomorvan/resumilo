@@ -1,4 +1,4 @@
-import { Record, User } from "pocketbase";
+import { Record } from 'pocketbase';
 
 export interface Summary {
   id: string,

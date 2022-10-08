@@ -1,24 +1,29 @@
-import { useRouter } from "next/router";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { object, string } from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
-import { toast } from "react-hot-toast";
+import { useRouter } from 'next/router';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { object, string } from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { toast } from 'react-hot-toast';
+import { createUser } from 'lib/pocketbase';
+
+// Styles
+import { container, header } from 'styles/components/form.css';
 
 // Components
-import { FaEye } from "react-icons/fa";
-import BaseLayout from "components/layouts/layout";
-import Button from "../components/button";
+import MinimalLayout from 'components/layouts/minimal';
+import Input from 'components/forms/input';
+import PasswordInput from 'components/forms/password';
+import redirect from 'lib/utils';
+import Button from '../components/button';
 
 const validationSchema = object().shape({
   email: string()
-    .required("Se requiere un correo electrónico.")
-    .email("Lo ingresado no corresponde a un correo electrónico."),
+    .required('Se requiere un correo electrónico.')
+    .email('Lo ingresado no corresponde a un correo electrónico.'),
   password: string()
-    .required("Se requiere una contraseña.")
-    .min(8, "La contraseña debe tener al menos 8 caracteres."),
+    .required('Se requiere una contraseña.')
+    .min(8, 'La contraseña debe tener al menos 8 caracteres.'),
   passwordConfirm: string().required(
-    "Se requiere una confirmación de contraseña."
+    'Se requiere una confirmación de contraseña.',
   ),
 });
 
@@ -28,9 +33,11 @@ interface Inputs {
   passwordConfirm: string;
 }
 
-/** SignUp page is exactly the same as LogIn, but it uses a different API endpoint, as well as has a confirm password step. */
-const SignUp = () => {
-  const [isHidden, setIsHidden] = useState<boolean>(true);
+/**
+ * SignUp page is exactly the same as LogIn, but it uses a different API endpoint,
+ * as well as has a confirm password step.
+ */
+function SignUp() {
   const {
     register,
     handleSubmit,
@@ -44,72 +51,50 @@ const SignUp = () => {
     passwordConfirm,
   }) => {
     if (password !== passwordConfirm) {
-      toast.error("Las contraseñas no coinciden.");
+      toast.error('Las contraseñas no coinciden.');
     } else {
-      const data = {
-        email: email,
-        password: password,
-        name: "HOLAAA",
-      };
-      fetch("/api/users/create", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: new Headers({
-          "Content-Type": "application/json, charset=utf-8",
-        }),
-      }).then(({ status }) => {
-        if (status === 200) {
-          toast.success(
-            "¡Tu usuario se creó correctamente!, redireccionándote..."
-          );
-          router.push("/resumenes");
-        } else {
-          toast.error("Hubo un error, inténtalo de nuevo.");
-        }
-      });
+      toast
+        .promise(createUser(email, password), {
+          loading: 'Creando tu usuario...',
+          success: '¡Creaste tu cuenta correctamente!',
+          error: 'Hubo un problema al crear tu cuenta.',
+        })
+        .catch((error) => toast.error(error))
+        .finally(() => redirect({
+          router, destination: '/profile',
+        }));
     }
   };
 
   return (
-    <BaseLayout title="Registrarse">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label>
-          <p>Correo electrónico</p>
-          <input type="email" {...register("email")} />
+    <MinimalLayout title="Creá tu cuenta">
+      <h1 className={header}>Creá tu cuenta</h1>
+      <form className={container} onSubmit={handleSubmit(onSubmit)}>
+        <Input
+          label="Correo electrónico"
+          name="email"
+          register={register}
+          error={errors.email}
+        />
 
-          {errors.email && <p>{errors.email.message}</p>}
-        </label>
+        <PasswordInput
+          label="Contraseña"
+          name="password"
+          register={register}
+          error={errors.password}
+        />
 
-        <span>
-          <label>
-            <p>Contraseña</p>
-            <input
-              type={isHidden ? "password" : "text"}
-              {...register("password")}
-            />
+        <PasswordInput
+          label="Repetir contraseña"
+          name="passwordConfirm"
+          register={register}
+          error={errors.passwordConfirm}
+        />
 
-            {errors.password && <p>{errors.password.message}</p>}
-          </label>
-          <FaEye onClick={() => setIsHidden((c) => !c)} />
-        </span>
-
-        <span>
-          <label>
-            <p>Confirmar contraseña</p>
-            <input
-              type={isHidden ? "password" : "text"}
-              {...register("passwordConfirm")}
-            />
-
-            {errors.password && <p>{errors.password.message}</p>}
-          </label>
-          <FaEye onClick={() => setIsHidden((c) => !c)} />
-        </span>
-
-        <Button type="submit">Registrarse</Button>
+        <Button wide submit>Registrarse</Button>
       </form>
-    </BaseLayout>
+    </MinimalLayout>
   );
-};
+}
 
 export default SignUp;
