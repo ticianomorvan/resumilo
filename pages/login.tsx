@@ -4,7 +4,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { object, string } from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { authUser } from 'lib/pocketbase';
-import redirect from 'lib/utils';
+import { redirect } from 'lib/utils';
 
 // Styles
 import { container, header, signUpMessage } from 'styles/components/form.css';

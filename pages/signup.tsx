@@ -4,6 +4,7 @@ import { object, string } from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { createUser } from 'lib/pocketbase';
+import { redirect } from 'lib/utils';
 
 // Styles
 import { container, header } from 'styles/components/form.css';
@@ -12,7 +13,6 @@ import { container, header } from 'styles/components/form.css';
 import MinimalLayout from 'components/layouts/minimal';
 import Input from 'components/forms/input';
 import PasswordInput from 'components/forms/password';
-import redirect from 'lib/utils';
 import Button from '../components/button';
 
 const validationSchema = object().shape({

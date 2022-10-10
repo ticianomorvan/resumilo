@@ -2,8 +2,8 @@ import { client } from 'lib/pocketbase';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
 import { container, name } from 'styles/components/navbar.css';
+import { redirect } from 'lib/utils';
 import useUser from 'hooks/useUser';
-import redirect from 'lib/utils';
 import Button from './button';
 
 function Navbar() {

@@ -3,6 +3,7 @@ import vars from 'styles/theme.css';
 
 export const container = style({
   width: vars.size.full,
+  margin: 'auto',
   padding: vars.spacing.sm,
   '@media': {
     'screen and (min-width: 768px)': {
@@ -42,52 +43,61 @@ export const formContainer = style({
   borderRadius: vars.rounded.lg,
 });
 
-export const fileUpload = {
-  container: style({
-    marginBlock: vars.spacing.sm,
-    marginBlockEnd: vars.spacing.sm,
-  }),
-  label: style({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0 1em',
-    fontSize: vars.text.sm,
-    color: vars.color['gray-300'],
-    '@media': {
-      'screen and (min-width: 768px)': {
-        fontSize: vars.text.sm,
-      },
+export const dropzone = style({
+  padding: vars.spacing.md,
+  marginBlock: vars.spacing.sm,
+  background: vars.color['primary-100'],
+  borderRadius: vars.rounded.md,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'stretch',
+  textAlign: 'center',
+  cursor: 'pointer',
+  color: vars.color['gray-300'],
+  border: `2px dashed ${vars.color['gray-50']}`,
+  transition: 'all 0.5s',
+  ':focus': {
+    borderColor: vars.color['primary-500'],
+  },
+});
+
+export const footNote = style({
+  display: 'flex',
+  gap: vars.spacing.sm,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: vars.color['gray-50'],
+  padding: vars.spacing.sm,
+  marginBlockStart: vars.spacing.sm,
+  marginBlockEnd: vars.spacing.sm,
+  borderRadius: vars.rounded.md,
+  color: vars.color['gray-300'],
+  fontSize: vars.text.xs,
+  '@media': {
+    'screen and (min-width: 768px)': {
+      fontSize: vars.text.sm,
     },
-  }),
-  input: style({
-    width: '100%',
-    marginBlockEnd: vars.spacing.sm,
-    backgroundColor: vars.color['primary-500'],
-    border: 'none',
-    padding: vars.spacing.sm,
-    borderRadius: vars.rounded.sm,
-    transition: 'all 0.25s',
-    ':hover': {
-      backgroundColor: vars.color['primary-400'],
-      cursor: 'pointer',
-    },
-  }),
-  footnote: style({
-    padding: vars.spacing.sm,
-    borderRadius: vars.rounded.sm,
-    fontSize: vars.text.xs,
-    color: vars.color['gray-200'],
-    backgroundColor: vars.color['gray-50'],
-    '@media': {
-      'screen and (min-width: 768px)': {
-        fontSize: vars.text.sm,
-      },
-    },
-  }),
-};
+  },
+});
+
+export const thumb = style({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  marginBlockEnd: vars.spacing.lg,
+  textAlign: 'center',
+});
+
+export const thumbInner = style({
+  maxWidth: 'max-content',
+  margin: 'auto',
+  padding: vars.spacing.xs,
+  border: `1px solid ${vars.color['gray-200']}`,
+});
 
 export const uploadMessage = style({
   marginBlockStart: vars.spacing.lg,
+  marginBlockEnd: vars.spacing.xs,
   fontSize: vars.text.md,
   textAlign: 'center',
   color: vars.color['gray-300'],

@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import vars from 'styles/theme.css';
 
-const container = style({
+export const container = style({
   width: vars.size.screen.width,
   maxHeight: vars.size.screen.height,
   marginBlock: vars.spacing.xl,
@@ -11,4 +11,6 @@ const container = style({
   userSelect: 'none',
 });
 
-export default container;
+export const content = style({
+  minWidth: vars.size.lg,
+});
