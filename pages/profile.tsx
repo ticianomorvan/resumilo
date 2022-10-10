@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 import Button from 'components/button';
 import Input from 'components/forms/input';
 import BaseLayout from 'components/layouts/base';
-import { container, fileUpload } from 'styles/components/form.css';
+import { container, fileUpload, header } from 'styles/components/form.css';
 import { error } from 'styles/components/input.css';
 
 interface Inputs {
@@ -50,6 +50,7 @@ export default function Profile() {
 
   return (
     <BaseLayout title="Perfil">
+      <h1 className={header}>Actualizá tus preferencias</h1>
       <form className={container} onSubmit={handleSubmit(onSubmit)}>
         <Input
           label="Nombre"
