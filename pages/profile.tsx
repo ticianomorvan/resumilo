@@ -2,26 +2,24 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import useUser from 'hooks/useUser';
 import { updateUserProfile } from 'lib/pocketbase';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { mixed, object, string } from 'yup';
+import { object, string } from 'yup';
+import { useDropzone } from 'react-dropzone';
+import { TEN_MEBIBYTES_LIMIT } from 'lib/utils';
 import toast from 'react-hot-toast';
 
 // Components
 import Button from 'components/button';
 import Input from 'components/forms/input';
 import BaseLayout from 'components/layouts/base';
-import { container, fileUpload, header } from 'styles/components/form.css';
-import { error } from 'styles/components/input.css';
-
-interface Inputs {
-  name: string;
-  avatar: FileList;
-}
+import {
+  container, dropzone, footNote, header,
+} from 'styles/components/form.css';
+import { FaInfoCircle } from 'react-icons/fa';
 
 const validationSchema = object().shape({
   name: string()
     .required('Se necesita un nombre.')
     .min(4, 'Tiene que tener un mínimo de cuatro caracteres.'),
-  avatar: mixed().required('Se necesita un avatar'),
 });
 
 export default function Profile() {
@@ -30,12 +28,26 @@ export default function Profile() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>({ resolver: yupResolver(validationSchema) });
+  } = useForm<{ name: string }>({ resolver: yupResolver(validationSchema) });
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const {
+    acceptedFiles, getRootProps, getInputProps,
+  } = useDropzone({
+    accept: {
+      'image/png': ['.png'],
+      'image/jpg': ['.jpg', '.jpeg'],
+    },
+    noClick: true,
+    maxSize: TEN_MEBIBYTES_LIMIT,
+    onDropRejected: (fileRejections) => toast.error('El archivo ingresado no es del tipo .jpg o .png', {
+      id: fileRejections.at(0)?.file.name,
+    }),
+  });
+
+  const onSubmit: SubmitHandler<{ name: string }> = async (data) => {
     const newUserProfile = {
       name: data.name,
-      avatar: data.avatar.item(0)!,
+      avatar: acceptedFiles.length > 0 ? acceptedFiles.at(0) : user?.profile?.avatar,
     };
 
     if (!user || !user.profile) toast.error('No tienes una cuenta.');
@@ -59,23 +71,27 @@ export default function Profile() {
           register={register}
         />
 
-        <div className={fileUpload.container}>
-          <p className={fileUpload.label}>Foto de perfil</p>
-          <input
-            className={fileUpload.input}
-            id="document"
-            type="file"
-            accept="image/png, image/jpg"
-            {...register('avatar')}
-          />
-
-          {errors.avatar && <p className={error}>{errors.avatar.message}</p>}
-          <p className={fileUpload.footnote}>
-            .JPG o .PNG de menos de 10 MB.
-          </p>
+        <div {...getRootProps({ className: dropzone })}>
+          <input {...getInputProps()} />
+          <p>Arrastra tu foto de perfil aquí o haz click para abrir el explorador.</p>
         </div>
 
-        <Button variant="ghost" submit>
+        <span className={footNote}>
+          <FaInfoCircle />
+          <p>Debe ser un archivo .png o .jpg de menos de 10 MB</p>
+        </span>
+
+        {acceptedFiles.map((file) => (
+          <p key={file.name}>
+            {file.name}
+            {' '}
+            |
+            {' '}
+            {file.size}
+          </p>
+        ))}
+
+        <Button variant="ghost" submit wide>
           Actualizar
         </Button>
       </form>

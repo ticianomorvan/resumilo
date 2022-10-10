@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { createSummary } from 'lib/pocketbase';
 import { Summary } from 'types/summary';
-import redirect from 'lib/utils';
+import { redirect, TEN_MEBIBYTES_LIMIT } from 'lib/utils';
 
 // react-hook-form
 import * as Yup from 'yup';
@@ -33,8 +33,6 @@ import Link from 'next/link';
 import Input from 'components/forms/input';
 import BaseLayout from 'components/layouts/base';
 import Button from 'components/button';
-
-const TEN_MEBIBYTES_LIMIT = 10485760; // 10 MB to Byte conversion
 
 const validationSchema = Yup.object().shape({
   title: Yup.string()
