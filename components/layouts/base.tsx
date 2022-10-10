@@ -2,7 +2,7 @@ import { ReactNode, Suspense } from 'react';
 import { Toaster } from 'react-hot-toast';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import container from 'styles/layouts/base.css';
+import { container, content } from 'styles/layouts/base.css';
 
 const Navbar = dynamic(() => import('../navbar'));
 
@@ -29,7 +29,7 @@ function BaseLayout({ title, children }: Props) {
         <Suspense fallback="Loading...">
           <Navbar />
         </Suspense>
-        <main>{children}</main>
+        <main className={content}>{children}</main>
       </div>
     </>
   );
