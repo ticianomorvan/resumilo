@@ -1,8 +1,6 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import useUser from 'hooks/useUser';
 import { updateUserProfile } from 'lib/pocketbase';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { object, string } from 'yup';
 import { useDropzone } from 'react-dropzone';
 import { TEN_MEBIBYTES_LIMIT } from 'lib/utils';
 import toast from 'react-hot-toast';
@@ -17,12 +15,6 @@ import {
 import { FaInfoCircle } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-
-const validationSchema = object().shape({
-  name: string()
-    .required('Se necesita un nombre.')
-    .min(4, 'Tiene que tener un mínimo de cuatro caracteres.'),
-});
 
 interface DropzoneFile extends File {
   preview: string,
@@ -48,9 +40,7 @@ export default function Profile() {
   const { user } = useUser();
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<{ name: string }>({
-    resolver: yupResolver(validationSchema),
-  });
+  const { register, handleSubmit, formState: { errors } } = useForm<{ name: string }>();
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -73,19 +63,30 @@ export default function Profile() {
   // If the user doesn't have an avatar already, use the one that uploads.
   // But, if the user doesn't want to change their avatar, keep the previous one.
   const onSubmit: SubmitHandler<{ name: string }> = async (data) => {
-    if (!user || !user.profile) toast.error('No tienes una cuenta.');
-    else {
-      const newUserProfile = {
-        name: data.name,
-        avatar: files.length > 0 ? files.at(0) : user?.profile?.avatar,
-      };
-
-      toast.promise(updateUserProfile(user.profile.id, newUserProfile), {
-        loading: 'Actualizando tus preferencias...',
-        success: 'Tus preferencias se actualizaron correctamente.',
-        error: 'Hubo un error al actualizar tus preferencias.',
-      });
+    if (!user || !user.profile) {
+      toast.error('No tienes una cuenta.');
+      return;
     }
+    if (!data.name && files.length === 0) {
+      toast('No cambiaste ninguna de tus preferencias.');
+      return;
+    }
+
+    if (data.name.length > 0 && data.name.length < 4) {
+      toast.error('El nuevo nombre debe tener más de cuatro caracteres.');
+      return;
+    }
+
+    const newUserProfile = {
+      name: data.name,
+      avatar: files.length > 0 ? files.at(0) : user?.profile?.avatar,
+    };
+
+    toast.promise(updateUserProfile(user.profile.id, newUserProfile), {
+      loading: 'Actualizando tus preferencias...',
+      success: 'Tus preferencias se actualizaron correctamente.',
+      error: 'Hubo un error al actualizar tus preferencias.',
+    });
   };
 
   useEffect(() => () => files.forEach((file) => URL.revokeObjectURL(file.preview)), [files]);
