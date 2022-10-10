@@ -10,6 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 // Hooks
+import { useDropzone } from 'react-dropzone';
 import { useRouter } from 'next/router';
 import useUser from 'hooks/useUser';
 
@@ -17,15 +18,17 @@ import useUser from 'hooks/useUser';
 
 import {
   container,
+  documentStatus,
   notLoggedIn,
-} from 'styles/pages/crear.css';
+} from 'styles/pages/create.css';
 
 import {
   header,
-  fileUpload,
   formContainer,
   uploadButton,
   uploadMessage,
+  dropzone,
+  footNote,
 } from 'styles/components/form.css';
 
 // Components
@@ -42,22 +45,29 @@ const validationSchema = Yup.object().shape({
   topic: Yup.string()
     .required('Se necesita un tema.')
     .max(24, 'No puede tener más de 24 caracteres.'),
-  file_reference: Yup.array().length(1, 'Se requiere un archivo .pdf o .docx'),
 });
 
 interface Inputs {
   title: string;
   description: string;
   topic: string;
-  file: FileList;
 }
 
 function Create() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>({ resolver: yupResolver(validationSchema) });
+  const { register, handleSubmit, formState: { errors } } = useForm<Inputs>({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    accept: {
+      'application/pdf': ['.pdf'],
+      'application/msword': ['.docx', '.doc'],
+    },
+    maxSize: TEN_MEBIBYTES_LIMIT,
+    onDropRejected: (fileRejections) => toast.error('El archivo ingresado no corresponde a un .pdf o .docx', {
+      id: fileRejections.at(0)?.file.name,
+    }),
+  });
 
   const { user } = useUser();
   const router = useRouter();
@@ -76,10 +86,9 @@ function Create() {
   const onSubmit: SubmitHandler<Inputs> = async ({
     title,
     description,
-    file,
     topic,
   }) => {
-    const summaryDocument = file.item(0); // Get the selected file from the input.
+    const summaryDocument = acceptedFiles.at(0); // Get the selected file from the input.
 
     if (!summaryDocument) {
       toast.error('Tienes que subir un archivo .docx o .pdf.', {
@@ -142,21 +151,22 @@ function Create() {
             error={errors.topic}
           />
 
-          <div className={fileUpload.container}>
-            <p className={fileUpload.label}>Documento</p>
-            <input
-              id="document"
-              className={fileUpload.input}
-              type="file"
-              accept="application/pdf, application/msword"
-              {...register('file')}
-            />
-            <p className={fileUpload.footnote}>
-              .pdf o .docx de menos de 10 MB.
-            </p>
-
-            {errors.file && <p>{errors.file.message}</p>}
+          <div {...getRootProps({ className: dropzone })}>
+            <input {...getInputProps()} />
+            <p>Arrastra aquí to resumen o haz click para abrir el explorador</p>
           </div>
+
+          <span className={footNote}>
+            <p>Debe ser un archivo .pdf o .docx de menos de 10 MB</p>
+          </span>
+
+          {acceptedFiles.length > 0
+            && (
+              <span className={documentStatus}>
+                <p>Documento:</p>
+                <b>{acceptedFiles.at(0)?.name}</b>
+              </span>
+            )}
 
           <p className={uploadMessage}>¿Todo listo?</p>
           <Button otherClasses={uploadButton} submit>

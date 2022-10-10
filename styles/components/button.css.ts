@@ -6,6 +6,7 @@ const button = style({
   fontFamily: vars.fontFamily,
   fontWeight: 'bold',
   marginInline: vars.spacing.xs,
+  marginBlock: vars.spacing.sm,
   borderRadius: vars.rounded.md,
   border: 'none',
   transitionDuration: '0.25s',

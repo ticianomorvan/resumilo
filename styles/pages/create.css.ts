@@ -23,3 +23,12 @@ export const container = style({
   display: 'grid',
   justifyItems: 'center',
 });
+
+export const documentStatus = style({
+  display: 'flex',
+  backgroundColor: vars.color['primary-200'],
+  borderRadius: vars.rounded.md,
+  justifyContent: 'center',
+  gap: vars.spacing.sm,
+  alignItems: 'center',
+});

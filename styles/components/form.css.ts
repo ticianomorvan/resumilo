@@ -44,7 +44,7 @@ export const formContainer = style({
 });
 
 export const dropzone = style({
-  padding: vars.spacing.sm,
+  padding: vars.spacing.md,
   marginBlock: vars.spacing.sm,
   background: vars.color['primary-100'],
   borderRadius: vars.rounded.md,
@@ -69,9 +69,15 @@ export const footNote = style({
   backgroundColor: vars.color['gray-50'],
   padding: vars.spacing.sm,
   marginBlockStart: vars.spacing.sm,
+  marginBlockEnd: vars.spacing.sm,
   borderRadius: vars.rounded.md,
   color: vars.color['gray-300'],
   fontSize: vars.text.xs,
+  '@media': {
+    'screen and (min-width: 768px)': {
+      fontSize: vars.text.sm,
+    },
+  },
 });
 
 export const thumb = style({
@@ -91,6 +97,7 @@ export const thumbInner = style({
 
 export const uploadMessage = style({
   marginBlockStart: vars.spacing.lg,
+  marginBlockEnd: vars.spacing.xs,
   fontSize: vars.text.md,
   textAlign: 'center',
   color: vars.color['gray-300'],
