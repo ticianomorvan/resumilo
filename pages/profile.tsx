@@ -12,9 +12,11 @@ import Button from 'components/button';
 import Input from 'components/forms/input';
 import BaseLayout from 'components/layouts/base';
 import {
-  container, dropzone, footNote, header,
+  container, dropzone, footNote, header, thumb, thumbInner,
 } from 'styles/components/form.css';
 import { FaInfoCircle } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 const validationSchema = object().shape({
   name: string()
@@ -22,36 +24,62 @@ const validationSchema = object().shape({
     .min(4, 'Tiene que tener un mínimo de cuatro caracteres.'),
 });
 
+interface DropzoneFile extends File {
+  preview: string,
+}
+
+function Thumb({ file }: { file: DropzoneFile }) {
+  return (
+    <span className={thumb}>
+      <p>Vista previa</p>
+      <div className={thumbInner}>
+        <Image
+          src={file.preview}
+          alt={file.name}
+          width={100}
+          height={100}
+        />
+      </div>
+    </span>
+  );
+}
+
 export default function Profile() {
   const { user } = useUser();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<{ name: string }>({ resolver: yupResolver(validationSchema) });
+  const [files, setFiles] = useState<DropzoneFile[]>([]);
 
-  const {
-    acceptedFiles, getRootProps, getInputProps,
-  } = useDropzone({
+  const { register, handleSubmit, formState: { errors } } = useForm<{ name: string }>({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const { getRootProps, getInputProps } = useDropzone({
     accept: {
       'image/png': ['.png'],
       'image/jpg': ['.jpg', '.jpeg'],
     },
     noClick: true,
     maxSize: TEN_MEBIBYTES_LIMIT,
+    onDrop: (acceptedFiles) => setFiles(
+      acceptedFiles.map((file) => Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      })),
+    ),
     onDropRejected: (fileRejections) => toast.error('El archivo ingresado no es del tipo .jpg o .png', {
       id: fileRejections.at(0)?.file.name,
     }),
   });
 
+  // First of all, if the user does have a profile, do the process.
+  // If the user doesn't have an avatar already, use the one that uploads.
+  // But, if the user doesn't want to change their avatar, keep the previous one.
   const onSubmit: SubmitHandler<{ name: string }> = async (data) => {
-    const newUserProfile = {
-      name: data.name,
-      avatar: acceptedFiles.length > 0 ? acceptedFiles.at(0) : user?.profile?.avatar,
-    };
-
     if (!user || !user.profile) toast.error('No tienes una cuenta.');
     else {
+      const newUserProfile = {
+        name: data.name,
+        avatar: files.length > 0 ? files.at(0) : user?.profile?.avatar,
+      };
+
       toast.promise(updateUserProfile(user.profile.id, newUserProfile), {
         loading: 'Actualizando tus preferencias...',
         success: 'Tus preferencias se actualizaron correctamente.',
@@ -59,6 +87,8 @@ export default function Profile() {
       });
     }
   };
+
+  useEffect(() => () => files.forEach((file) => URL.revokeObjectURL(file.preview)), [files]);
 
   return (
     <BaseLayout title="Perfil">
@@ -81,15 +111,10 @@ export default function Profile() {
           <p>Debe ser un archivo .png o .jpg de menos de 10 MB</p>
         </span>
 
-        {acceptedFiles.map((file) => (
-          <p key={file.name}>
-            {file.name}
-            {' '}
-            |
-            {' '}
-            {file.size}
-          </p>
-        ))}
+        {files
+          && files.map((file) => (
+            <Thumb key={file.name} file={file} />
+          ))}
 
         <Button variant="ghost" submit wide>
           Actualizar

@@ -69,10 +69,24 @@ export const footNote = style({
   backgroundColor: vars.color['gray-50'],
   padding: vars.spacing.sm,
   marginBlockStart: vars.spacing.sm,
-  marginBlockEnd: vars.spacing.lg,
   borderRadius: vars.rounded.md,
   color: vars.color['gray-300'],
   fontSize: vars.text.xs,
+});
+
+export const thumb = style({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  marginBlockEnd: vars.spacing.lg,
+  textAlign: 'center',
+});
+
+export const thumbInner = style({
+  maxWidth: 'max-content',
+  margin: 'auto',
+  padding: vars.spacing.xs,
+  border: `1px solid ${vars.color['gray-200']}`,
 });
 
 export const uploadMessage = style({
