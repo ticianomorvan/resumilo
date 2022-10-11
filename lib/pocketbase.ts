@@ -113,3 +113,5 @@ export const getSummaryById = async (id: string) => {
 };
 
 export const getSummaryDocument = (record: string, file: string) => `${process.env.NEXT_PUBLIC_POCKETBASE}/api/files/summaries/${record}/${file}`;
+
+export const getUserAvatar = (userId: string, file: string) => `${process.env.NEXT_PUBLIC_POCKETBASE}/api/files/systemprofiles0/${userId}/${file}`;

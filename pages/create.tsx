@@ -10,7 +10,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 // Hooks
-import { useDropzone } from 'react-dropzone';
 import { useRouter } from 'next/router';
 import useUser from 'hooks/useUser';
 
@@ -27,8 +26,6 @@ import {
   formContainer,
   uploadButton,
   uploadMessage,
-  dropzone,
-  footNote,
 } from 'styles/components/form.css';
 
 // Components
@@ -36,6 +33,8 @@ import Link from 'next/link';
 import Input from 'components/forms/input';
 import BaseLayout from 'components/layouts/base';
 import Button from 'components/button';
+import { useState } from 'react';
+import DocumentDropzone from 'components/dropzone/document';
 
 const validationSchema = Yup.object().shape({
   title: Yup.string()
@@ -53,20 +52,10 @@ interface Inputs {
   topic: string;
 }
 
-function Create() {
+export default function Create() {
+  const [files, setFiles] = useState<File[]>([]);
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>({
     resolver: yupResolver(validationSchema),
-  });
-
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    accept: {
-      'application/pdf': ['.pdf'],
-      'application/msword': ['.docx', '.doc'],
-    },
-    maxSize: TEN_MEBIBYTES_LIMIT,
-    onDropRejected: (fileRejections) => toast.error('El archivo ingresado no corresponde a un .pdf o .docx', {
-      id: fileRejections.at(0)?.file.name,
-    }),
   });
 
   const { user } = useUser();
@@ -88,7 +77,7 @@ function Create() {
     description,
     topic,
   }) => {
-    const summaryDocument = acceptedFiles.at(0); // Get the selected file from the input.
+    const summaryDocument = files.at(0); // Get the selected file from the input.
 
     if (!summaryDocument) {
       toast.error('Tienes que subir un archivo .docx o .pdf.', {
@@ -151,20 +140,13 @@ function Create() {
             error={errors.topic}
           />
 
-          <div {...getRootProps({ className: dropzone })}>
-            <input {...getInputProps()} />
-            <p>Arrastra aquí to resumen o haz click para abrir el explorador</p>
-          </div>
+          <DocumentDropzone dispatch={setFiles} />
 
-          <span className={footNote}>
-            <p>Debe ser un archivo .pdf o .docx de menos de 10 MB</p>
-          </span>
-
-          {acceptedFiles.length > 0
+          {files.length > 0
             && (
               <span className={documentStatus}>
                 <p>Documento:</p>
-                <b>{acceptedFiles.at(0)?.name}</b>
+                <b>{files.at(0)?.name}</b>
               </span>
             )}
 
@@ -177,5 +159,3 @@ function Create() {
     </BaseLayout>
   );
 }
-
-export default Create;

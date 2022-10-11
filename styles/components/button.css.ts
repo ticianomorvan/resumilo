@@ -22,7 +22,7 @@ export const full = style({ width: vars.size.full });
 
 const buttonVariants = styleVariants({
   primary: [button, {
-    backgroundColor: vars.color['primary-700'],
+    backgroundColor: vars.color['primary-600'],
     color: '#EEE',
     ':hover': {
       backgroundColor: vars.color['primary-500'],

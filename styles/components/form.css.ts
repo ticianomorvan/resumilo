@@ -43,58 +43,6 @@ export const formContainer = style({
   borderRadius: vars.rounded.lg,
 });
 
-export const dropzone = style({
-  padding: vars.spacing.md,
-  marginBlock: vars.spacing.sm,
-  background: vars.color['primary-100'],
-  borderRadius: vars.rounded.md,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'stretch',
-  textAlign: 'center',
-  cursor: 'pointer',
-  color: vars.color['gray-300'],
-  border: `2px dashed ${vars.color['gray-50']}`,
-  transition: 'all 0.5s',
-  ':focus': {
-    borderColor: vars.color['primary-500'],
-  },
-});
-
-export const footNote = style({
-  display: 'flex',
-  gap: vars.spacing.sm,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: vars.color['gray-50'],
-  padding: vars.spacing.sm,
-  marginBlockStart: vars.spacing.sm,
-  marginBlockEnd: vars.spacing.sm,
-  borderRadius: vars.rounded.md,
-  color: vars.color['gray-300'],
-  fontSize: vars.text.xs,
-  '@media': {
-    'screen and (min-width: 768px)': {
-      fontSize: vars.text.sm,
-    },
-  },
-});
-
-export const thumb = style({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  marginBlockEnd: vars.spacing.lg,
-  textAlign: 'center',
-});
-
-export const thumbInner = style({
-  maxWidth: 'max-content',
-  margin: 'auto',
-  padding: vars.spacing.xs,
-  border: `1px solid ${vars.color['gray-200']}`,
-});
-
 export const uploadMessage = style({
   marginBlockStart: vars.spacing.lg,
   marginBlockEnd: vars.spacing.xs,

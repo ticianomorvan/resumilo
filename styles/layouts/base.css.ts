@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 import vars from 'styles/theme.css';
 
 export const container = style({
-  width: vars.size.screen.width,
+  width: vars.size.full,
   maxHeight: vars.size.screen.height,
   marginBlock: vars.spacing.xl,
   display: 'flex',

@@ -1,20 +1,21 @@
 import useUser from 'hooks/useUser';
 import { updateUserProfile } from 'lib/pocketbase';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useDropzone } from 'react-dropzone';
-import { TEN_MEBIBYTES_LIMIT } from 'lib/utils';
 import toast from 'react-hot-toast';
+import { useEffect, useState } from 'react';
+
+// Styles
+import { container, header } from 'styles/components/form.css';
+import { thumb, thumbInner } from 'styles/components/dropzone.css';
 
 // Components
 import Button from 'components/button';
 import Input from 'components/forms/input';
 import BaseLayout from 'components/layouts/base';
-import {
-  container, dropzone, footNote, header, thumb, thumbInner,
-} from 'styles/components/form.css';
-import { FaInfoCircle } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import PreferencesDropzone from 'components/dropzone/preferences';
+import Loader from 'components/loader';
+import Profile from 'components/profile';
 
 interface DropzoneFile extends File {
   preview: string,
@@ -36,27 +37,15 @@ function Thumb({ file }: { file: DropzoneFile }) {
   );
 }
 
-export default function Profile() {
+export default function Preferences() {
   const { user } = useUser();
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const { register, handleSubmit, formState: { errors } } = useForm<{ name: string }>();
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: {
-      'image/png': ['.png'],
-      'image/jpg': ['.jpg', '.jpeg'],
-    },
-    maxSize: TEN_MEBIBYTES_LIMIT,
-    onDrop: (acceptedFiles) => setFiles(
-      acceptedFiles.map((file) => Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      })),
-    ),
-    onDropRejected: (fileRejections) => toast.error('El archivo ingresado no es del tipo .jpg o .png', {
-      id: fileRejections.at(0)?.file.name,
-    }),
-  });
+  useEffect(() => () => files.forEach((file) => URL.revokeObjectURL(file.preview)), [files]);
+
+  if (!user || !user.profile) return <Loader />;
 
   // First of all, if the user does have a profile, do the process.
   // If the user doesn't have an avatar already, use the one that uploads.
@@ -88,11 +77,10 @@ export default function Profile() {
     });
   };
 
-  useEffect(() => () => files.forEach((file) => URL.revokeObjectURL(file.preview)), [files]);
-
   return (
     <BaseLayout title="Perfil">
-      <h1 className={header}>Actualizá tus preferencias</h1>
+      <Profile data={user} />
+      <h2 className={header}>Actualizá tus preferencias</h2>
       <form className={container} onSubmit={handleSubmit(onSubmit)}>
         <Input
           label="Nombre"
@@ -101,22 +89,14 @@ export default function Profile() {
           register={register}
         />
 
-        <div {...getRootProps({ className: dropzone })}>
-          <input {...getInputProps()} />
-          <p>Arrastra tu foto de perfil aquí o haz click para abrir el explorador.</p>
-        </div>
-
-        <span className={footNote}>
-          <FaInfoCircle />
-          <p>Debe ser un archivo .png o .jpg de menos de 10 MB</p>
-        </span>
+        <PreferencesDropzone dispatch={setFiles} />
 
         {files
           && files.map((file) => (
             <Thumb key={file.name} file={file} />
           ))}
 
-        <Button variant="ghost" submit wide>
+        <Button submit wide>
           Actualizar
         </Button>
       </form>
