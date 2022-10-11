@@ -9,11 +9,16 @@ export const container = style({
   zIndex: 100,
   justifyContent: 'space-between',
   alignItems: 'center',
-  backgroundColor: 'white',
   boxShadow: '2px 2px 20px #0002',
   paddingInline: vars.spacing.md,
+  backdropFilter: 'blur(20px)',
 });
 
 export const name = style({
   fontSize: vars.text.md,
+});
+
+export const actions = style({
+  display: 'flex',
+  gap: vars.spacing.sm,
 });

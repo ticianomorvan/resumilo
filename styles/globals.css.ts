@@ -14,6 +14,10 @@ globalStyle('h2', {
   fontWeight: 'normal',
 });
 
+globalStyle('p', {
+  fontFamily: vars.fontFamily,
+});
+
 globalStyle('input[type="file"]', {
   display: 'flex',
 });
