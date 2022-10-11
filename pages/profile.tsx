@@ -47,7 +47,6 @@ export default function Profile() {
       'image/png': ['.png'],
       'image/jpg': ['.jpg', '.jpeg'],
     },
-    noClick: true,
     maxSize: TEN_MEBIBYTES_LIMIT,
     onDrop: (acceptedFiles) => setFiles(
       acceptedFiles.map((file) => Object.assign(file, {
