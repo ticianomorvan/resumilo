@@ -9,14 +9,11 @@ interface Props {
   label: ReactNode | string,
   title: ReactNode | string,
   description: ReactNode | string,
-  action: {
-    label: string,
-    dispatch: () => void;
-  }
+  children: ReactNode,
 }
 
 export default function DialogComponent({
-  label, title, description, action,
+  label, title, description, children,
 }: Props) {
   return (
     <AlertDialog.Root>
@@ -38,7 +35,7 @@ export default function DialogComponent({
               <Button variant="ghost">Cancelar</Button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
-              <Button variant="caution" onClick={action.dispatch}>{action.label}</Button>
+              {children}
             </AlertDialog.Action>
           </div>
 

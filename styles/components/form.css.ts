@@ -54,3 +54,12 @@ export const uploadMessage = style({
 export const uploadButton = style({
   width: '100%',
 });
+
+export const agreement = style({
+  display: 'flex',
+  backgroundColor: vars.color['error-light'],
+  padding: vars.spacing.md,
+  gap: vars.spacing.sm,
+  justifyContent: 'space-around',
+  marginBlock: vars.spacing.md,
+});

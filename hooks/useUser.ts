@@ -15,7 +15,7 @@ const useUser = () => {
     } else if (model && isValid && (router.pathname.includes('login') || router.pathname.includes('signup'))) {
       router.replace('/');
     } else {
-      setUser(model as User);
+      setUser(authStore.model as User);
     }
   }, [router]);
 

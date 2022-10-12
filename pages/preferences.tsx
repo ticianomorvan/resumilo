@@ -5,17 +5,17 @@ import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 
 // Styles
-import { container, header } from 'styles/components/form.css';
+import { agreement, container, header } from 'styles/components/form.css';
 import { thumb, thumbInner } from 'styles/components/dropzone.css';
 
 // Components
-import Button from 'components/button';
 import Input from 'components/forms/input';
 import BaseLayout from 'components/layouts/base';
 import Image from 'next/image';
 import PreferencesDropzone from 'components/dropzone/preferences';
 import Loader from 'components/loader';
 import Profile from 'components/profile';
+import Button from 'components/button';
 
 interface DropzoneFile extends File {
   preview: string,
@@ -27,6 +27,7 @@ function Thumb({ file }: { file: DropzoneFile }) {
       <p>Vista previa</p>
       <div className={thumbInner}>
         <Image
+          objectFit="cover"
           src={file.preview}
           alt={file.name}
           width={100}
@@ -39,6 +40,7 @@ function Thumb({ file }: { file: DropzoneFile }) {
 
 export default function Preferences() {
   const { user } = useUser();
+  const [isChecked, setIsChecked] = useState<boolean>(false);
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const { register, handleSubmit, formState: { errors } } = useForm<{ name: string }>();
@@ -66,8 +68,8 @@ export default function Preferences() {
     }
 
     const newUserProfile = {
-      name: data.name,
-      avatar: files.length > 0 ? files.at(0) : user?.profile?.avatar,
+      name: data.name ?? user.profile.name,
+      avatar: files.length > 0 ? files.at(0) : user.profile.avatar,
     };
 
     toast.promise(updateUserProfile(user.profile.id, newUserProfile), {
@@ -96,9 +98,16 @@ export default function Preferences() {
             <Thumb key={file.name} file={file} />
           ))}
 
-        <Button submit wide>
-          Actualizar
-        </Button>
+        <label htmlFor="agreement" className={agreement}>
+          Cambiar tus preferencias puede requerir volver a iniciar sesión, ¿estás de acuerdo?
+          <input id="agreement" type="checkbox" onChange={() => setIsChecked(!isChecked)} />
+        </label>
+
+        {isChecked && (
+          <Button variant="primary" submit wide>
+            Actualizar
+          </Button>
+        )}
       </form>
     </BaseLayout>
   );

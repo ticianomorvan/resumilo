@@ -1,6 +1,17 @@
 import vars from 'styles/theme.css';
 import { keyframes, style } from '@vanilla-extract/css';
 
+export const image = style({
+  borderRadius: vars.rounded.full,
+  objectFit: 'cover',
+});
+
+export const fallback = style({
+  border: '1px solid #000',
+  padding: vars.spacing.md,
+  borderRadius: vars.rounded.full,
+});
+
 // Popover
 
 export const trigger = style({
