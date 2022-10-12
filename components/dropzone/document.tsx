@@ -13,8 +13,8 @@ interface Props {
 export default function DocumentDropzone({ dispatch }: Props) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      'application/pdf': ['.pdf'],
-      'application/msword': ['.docx', '.doc'],
+      'application/pdf': [],
+      'application/msword': [],
     },
     maxSize: TEN_MEBIBYTES_LIMIT,
     onDrop: (acceptedFiles) => dispatch(acceptedFiles),

@@ -14,8 +14,7 @@ interface Props {
 export default function PreferencesDropzone({ dispatch }: Props) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      'image/png': ['.png'],
-      'image/jpg': ['.jpg', '.jgeg'],
+      'image/*': [],
     },
     maxSize: TEN_MEBIBYTES_LIMIT,
     onDrop: (acceptedFiles) => dispatch(
