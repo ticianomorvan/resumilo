@@ -14,7 +14,7 @@ export default function DocumentDropzone({ dispatch }: Props) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       'application/pdf': [],
-      '.docx': [],
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [],
     },
     maxSize: TEN_MEBIBYTES_LIMIT,
     onDrop: (acceptedFiles) => dispatch(acceptedFiles),

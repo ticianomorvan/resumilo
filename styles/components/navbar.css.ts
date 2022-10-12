@@ -57,6 +57,12 @@ export const dropdown = {
     width: 'max-content',
     animation: `${showDropdown} 0.25s`,
   }),
+  item: style({
+    ':focus-visible': {
+      border: 'none',
+      outline: 'none',
+    },
+  }),
   itemSpan: style({
     display: 'flex',
     gap: vars.spacing.sm,

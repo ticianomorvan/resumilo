@@ -24,7 +24,7 @@ function DropdownLogo() {
       </Trigger>
       <Portal>
         <Content className={dropdown.content}>
-          <Item>
+          <Item className={dropdown.item}>
             <Link href="/resumenes">
               <span className={dropdown.itemSpan}>
                 <FaFileAlt />
@@ -33,7 +33,7 @@ function DropdownLogo() {
             </Link>
           </Item>
 
-          <Item>
+          <Item className={dropdown.item}>
             <Link href="/create">
               <span className={dropdown.itemSpan}>
                 <FaPlusCircle />

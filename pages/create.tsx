@@ -95,6 +95,8 @@ export default function Create() {
         author: user.id,
 
         // Format the date to be YEAR-MONTH-DAY HOUR:MINUTE:SECOND
+        // The client sends '24 h' but the server only accepts '23:59 => 00:00',
+        // so we can't upload content this hour.
         date: format(new Date(), 'yyyy-MM-dd kk:mm:ss'),
         document: summaryDocument,
         topic,
