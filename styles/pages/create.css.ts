@@ -14,7 +14,7 @@ export const notLoggedIn = {
     fontWeight: 'bold',
   }),
   link: style({
-    color: vars.color['primary-500'],
+    color: vars.colors.primary.principal,
     textDecoration: 'underline',
   }),
 };
@@ -28,7 +28,7 @@ export const container = style({
 export const documentStatus = style({
   display: 'flex',
   flexWrap: 'wrap',
-  backgroundColor: vars.color['primary-200'],
+  backgroundColor: vars.colors.primary.light,
   borderRadius: vars.rounded.md,
   padding: vars.spacing.sm,
   justifyContent: 'center',

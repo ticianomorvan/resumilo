@@ -29,7 +29,7 @@ globalStyle('#nprogress', {
 });
 
 globalStyle('#nprogress .bar', {
-  background: vars.color['primary-500'],
+  background: vars.colors.primary.light,
   position: 'fixed',
   zIndex: 1031,
   top: 0,

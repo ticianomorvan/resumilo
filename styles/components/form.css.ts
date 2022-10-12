@@ -18,19 +18,18 @@ export const container = style({
 
 export const header = style({
   textAlign: 'center',
-  color: vars.color['gray-300'],
+  color: vars.colors.gray12,
 });
 
 export const signUpMessage = style({
   textAlign: 'center',
   padding: vars.spacing.sm,
-  background: vars.color['primary-100'],
-  color: vars.color['primary-600'],
+  textDecoration: 'underline',
+  color: vars.colors.primary.semitone,
   transition: 'all 0.15s',
   borderRadius: vars.rounded.sm,
   ':hover': {
-    background: vars.color['primary-600'],
-    color: '#FFF',
+    color: vars.colors.primary.darker,
     cursor: 'pointer',
   },
 });
@@ -48,7 +47,7 @@ export const uploadMessage = style({
   marginBlockEnd: vars.spacing.xs,
   fontSize: vars.text.md,
   textAlign: 'center',
-  color: vars.color['gray-300'],
+  color: vars.colors.gray12,
 });
 
 export const uploadButton = style({
@@ -57,7 +56,7 @@ export const uploadButton = style({
 
 export const agreement = style({
   display: 'flex',
-  backgroundColor: vars.color['error-light'],
+  backgroundColor: vars.colors.warning.lighter,
   padding: vars.spacing.md,
   gap: vars.spacing.sm,
   justifyContent: 'space-around',

@@ -4,7 +4,7 @@ import vars from 'styles/theme.css';
 export const dropzone = style({
   padding: vars.spacing.md,
   marginBlock: vars.spacing.sm,
-  background: vars.color['primary-100'],
+  background: vars.colors.primary.light,
   borderRadius: vars.rounded.md,
   display: 'flex',
   flexDirection: 'column',
@@ -12,14 +12,14 @@ export const dropzone = style({
   alignItems: 'center',
   textAlign: 'center',
   cursor: 'pointer',
-  color: vars.color['gray-300'],
-  border: `2px dashed ${vars.color['primary-700']}`,
+  color: vars.colors.gray12,
+  border: `2px dashed ${vars.colors.primary.darker}`,
   transition: 'all 0.5s',
   ':focus': {
-    borderColor: vars.color['primary-500'],
+    borderColor: vars.colors.primary.principal,
   },
   ':hover': {
-    backgroundColor: vars.color['primary-200'],
+    backgroundColor: vars.colors.primary.principal,
   },
 });
 
@@ -28,12 +28,12 @@ export const footNote = style({
   gap: vars.spacing.sm,
   justifyContent: 'center',
   alignItems: 'center',
-  border: `2px solid ${vars.color['primary-600']}`,
+  border: `2px solid ${vars.colors.primary.principal}`,
   padding: vars.spacing.sm,
   marginBlockStart: vars.spacing.sm,
   marginBlockEnd: vars.spacing.sm,
   borderRadius: vars.rounded.md,
-  color: vars.color['gray-300'],
+  color: vars.colors.gray12,
   fontSize: vars.text.xs,
   '@media': {
     'screen and (min-width: 768px)': {
@@ -54,5 +54,5 @@ export const thumbInner = style({
   maxWidth: 'max-content',
   margin: 'auto',
   padding: vars.spacing.xs,
-  border: `1px solid ${vars.color['gray-200']}`,
+  border: `1px solid ${vars.colors.gray2}`,
 });

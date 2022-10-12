@@ -15,7 +15,7 @@ export const username = style({
 });
 
 export const additionalInformation = style({
-  color: vars.color['gray-200'],
+  color: vars.colors.gray10,
 });
 
 export default profile;

@@ -7,21 +7,21 @@ export const icon = style({
 
 const flash = keyframes({
   '0%': {
-    backgroundColor: vars.color['primary-800'],
-    boxShadow: `32px 0 ${vars.color['primary-800']}, -32px 0 ${vars.color['primary-500']}`,
+    backgroundColor: vars.colors.primary.darker,
+    boxShadow: `32px 0 ${vars.colors.primary.darker}, -32px 0 ${vars.colors.primary.principal}`,
   },
   '50%': {
-    backgroundColor: vars.color['primary-500'],
-    boxShadow: `32px 0 ${vars.color['primary-800']}, -32px 0 ${vars.color['primary-800']}`,
+    backgroundColor: vars.colors.primary.principal,
+    boxShadow: `32px 0 ${vars.colors.primary.darker}, -32px 0 ${vars.colors.primary.darker}`,
   },
   '100%': {
-    backgroundColor: vars.color['primary-800'],
-    boxShadow: `32px 0 ${vars.color['primary-500']}, -32px 0 ${vars.color['primary-800']}`,
+    backgroundColor: vars.colors.primary.darker,
+    boxShadow: `32px 0 ${vars.colors.primary.principal}, -32px 0 ${vars.colors.primary.darker}`,
   },
 });
 
 export const loaderBackground = style({
-  backgroundColor: vars.color['primary-100'],
+  backgroundColor: vars.colors.primary.light,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -32,7 +32,7 @@ export const loader = style({
   width: '16px',
   height: '16px',
   borderRadius: '50%',
-  backgroundColor: vars.color['primary-500'],
+  backgroundColor: vars.colors.primary.principal,
   boxShadow: '32px 0 #fff, -32px 0 #fff',
   position: 'relative',
   animation: `${flash} 0.5s ease-out infinite alternate`,

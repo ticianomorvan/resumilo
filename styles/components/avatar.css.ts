@@ -49,6 +49,6 @@ export const item = style({
   transition: 'all 0.25s',
   ':hover': {
     cursor: 'pointer',
-    backgroundColor: vars.color['primary-100'],
+    backgroundColor: vars.colors.primary.light,
   },
 });

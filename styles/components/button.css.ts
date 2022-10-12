@@ -22,21 +22,21 @@ export const full = style({ width: vars.size.full });
 
 const buttonVariants = styleVariants({
   primary: [button, {
-    backgroundColor: vars.color['primary-600'],
+    backgroundColor: vars.colors.primary.principal,
     color: '#EEE',
     ':hover': {
-      backgroundColor: vars.color['primary-500'],
+      backgroundColor: vars.colors.primary.semitone,
     },
   }],
   ghost: [button, {
-    backgroundColor: vars.color['primary-200'],
-    color: vars.color['primary-700'],
+    backgroundColor: vars.colors.primary.light,
+    color: vars.colors.primary.darker,
     ':hover': {
-      backgroundColor: vars.color['primary-300'],
+      backgroundColor: vars.colors.primary.semitone,
     },
   }],
   caution: [button, {
-    backgroundColor: vars.color['error-dark'],
+    backgroundColor: vars.colors.warning.principal,
     color: '#EEE',
     ':hover': {
       filter: 'brightness(0.85)',

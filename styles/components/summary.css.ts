@@ -7,7 +7,7 @@ export const container = style({
   flex: 1,
   flexDirection: 'column',
   fontFamily: vars.fontFamily,
-  backgroundColor: vars.color['primary-500'],
+  backgroundColor: vars.colors.primary.principal,
   padding: vars.spacing.md,
   gap: vars.spacing.lg,
   alignItems: 'center',
@@ -15,7 +15,7 @@ export const container = style({
   borderRadius: vars.rounded.md,
   transition: 'all 0.25s',
   ':hover': {
-    backgroundColor: vars.color['primary-600'],
+    backgroundColor: vars.colors.primary.semitone,
     cursor: 'pointer',
     scale: '1.05',
   },
@@ -36,5 +36,5 @@ export const title = style({
 });
 
 export const date = style({
-  color: vars.color['gray-300'],
+  color: vars.colors.gray3,
 });

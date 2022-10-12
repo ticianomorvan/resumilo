@@ -22,7 +22,7 @@ const showDialog = keyframes({
 });
 
 export const invoker = style({
-  backgroundColor: vars.color['error-dark'],
+  backgroundColor: vars.colors.warning.principal,
   border: 'none',
   color: 'white',
   width: vars.size.full,

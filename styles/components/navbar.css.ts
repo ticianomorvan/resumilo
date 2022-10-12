@@ -44,7 +44,7 @@ export const dropdown = {
     fontSize: vars.text.xs,
   }),
   content: style({
-    backgroundColor: vars.color['primary-900'],
+    backgroundColor: vars.colors.primary.semitone,
     padding: vars.spacing.md,
     zIndex: 140,
     position: 'fixed',

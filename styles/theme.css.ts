@@ -1,24 +1,27 @@
 import { createGlobalTheme } from '@vanilla-extract/css';
+import {
+  red, blue, yellow, gray,
+} from '@radix-ui/colors';
 
 const vars = createGlobalTheme('html', {
-  color: {
-    'primary-100': '#d1f0ff',
-    'primary-200': '#a7e2ff',
-    'primary-300': '#88d2f8',
-    'primary-400': '#73c8f3',
-    'primary-500': '#53b5e7',
-    'primary-600': '#278bbf',
-    'primary-700': '#146f9e',
-    'primary-800': '#0a4b6c',
-    'primary-900': '#042e44',
-    'error-dark': '#E91A1A',
-    'error-light': '#FFB7B7',
-    warning: '#F1D442',
-    info: '#41A0F2',
-    'gray-50': '#0042',
-    'gray-100': '#0045',
-    'gray-200': '#004a',
-    'gray-300': '#002e',
+  colors: {
+    primary: {
+      light: '#9DCEE2',
+      principal: '#4091C9',
+      semitone: '#1368AA',
+      darker: '#033270',
+    },
+    warning: {
+      light: '#F29479',
+      lighter: '#F26A4F',
+      principal: '#EF3C2D',
+      darker: '#CB1B16',
+      dark: '#65010C',
+    },
+    ...red,
+    ...blue,
+    ...yellow,
+    ...gray,
   },
   spacing: {
     xs: '0.25em',

@@ -19,7 +19,7 @@ export const container = style({
 
 export const label = style({
   fontSize: vars.text.sm,
-  color: vars.color['gray-300'],
+  color: vars.colors.gray12,
   paddingBlock: vars.spacing.xs,
   marginBlock: 0,
   '@media': {
@@ -32,10 +32,10 @@ export const label = style({
 export const input = style({
   width: vars.size.full,
   padding: vars.spacing.xs,
-  borderColor: vars.color['gray-100'],
+  borderColor: vars.colors.gray12,
   borderWidth: '1px',
   ':focus-visible': {
-    outlineColor: vars.color['primary-500'],
+    outlineColor: vars.colors.primary.principal,
   },
   fontFamily: vars.fontFamily,
   fontSize: vars.text.xs,
@@ -47,10 +47,10 @@ export const input = style({
 });
 
 export const error = style({
-  backgroundColor: vars.color['error-light'],
+  backgroundColor: vars.colors.warning.light,
   padding: vars.spacing.sm,
   borderRadius: vars.rounded.sm,
-  color: vars.color['error-dark'],
+  color: vars.colors.warning.dark,
   animationName: errorShow,
   animationDuration: '0.5s',
 });
@@ -62,12 +62,12 @@ export const passwordInput = style({
 
 export const showPassword = style({
   border: 'none',
-  background: vars.color['primary-200'],
+  background: vars.colors.primary.light,
   padding: vars.spacing.sm,
   fontSize: vars.text.sm,
   transition: 'all 0.15s',
   ':hover': {
     cursor: 'pointer',
-    background: vars.color['primary-300'],
+    background: vars.colors.primary.principal,
   },
 });
