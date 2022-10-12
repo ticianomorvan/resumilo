@@ -14,13 +14,18 @@ export default function DocumentDropzone({ dispatch }: Props) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       'application/pdf': [],
-      'application/msword': [],
+      '.docx': [],
     },
     maxSize: TEN_MEBIBYTES_LIMIT,
     onDrop: (acceptedFiles) => dispatch(acceptedFiles),
-    onDropRejected: (fileRejections) => toast.error('No ingresaste un documento .pdf o .docx', {
-      id: fileRejections.at(0)?.file.name,
-    }),
+    onDropRejected: (fileRejections) => {
+      const rejectedFile = fileRejections.at(0);
+      if (rejectedFile?.errors.at(0)?.message.includes('bytes')) {
+        toast.error('El archivo supera los 10 MB.');
+      } else {
+        toast.error('No es un archivo PDF o DOCX');
+      }
+    },
   });
 
   return (

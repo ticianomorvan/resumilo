@@ -22,12 +22,15 @@ export const notLoggedIn = {
 export const container = style({
   display: 'grid',
   justifyItems: 'center',
+  width: vars.size.full,
 });
 
 export const documentStatus = style({
   display: 'flex',
+  flexWrap: 'wrap',
   backgroundColor: vars.color['primary-200'],
   borderRadius: vars.rounded.md,
+  padding: vars.spacing.sm,
   justifyContent: 'center',
   gap: vars.spacing.sm,
   alignItems: 'center',

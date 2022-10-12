@@ -50,6 +50,7 @@ const vars = createGlobalTheme('html', {
     md: '45%',
     lg: '60%',
     xl: '80%',
+    '2xl': '90%',
     half: {
       width: '50vw',
       height: '50vh',

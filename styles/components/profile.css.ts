@@ -11,6 +11,7 @@ const profile = style({
 
 export const username = style({
   marginBlock: vars.spacing.xs,
+  textAlign: 'center',
 });
 
 export const additionalInformation = style({

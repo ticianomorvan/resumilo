@@ -1,60 +1,16 @@
-import useUser from 'hooks/useUser';
-import Link from 'next/link';
 import { client, getUserAvatar } from 'lib/pocketbase';
 import { User } from 'pocketbase';
-import {
-  action, actions, content, dialog, item, overlay, trigger,
-} from 'styles/components/avatar.css';
+import { content, item, trigger } from 'styles/components/avatar.css';
+import { redirect } from 'lib/utils';
+import { useRouter } from 'next/router';
+import useUser from 'hooks/useUser';
+import toast from 'react-hot-toast';
 
 // Components
 import * as Avatar from '@radix-ui/react-avatar';
 import * as Popover from '@radix-ui/react-popover';
-import * as AlertDialog from '@radix-ui/react-alert-dialog';
-import { redirect } from 'lib/utils';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/router';
-import Button from './button';
-
-function CloseSession() {
-  const router = useRouter();
-
-  const signOutAction = async () => {
-    client.authStore.clear();
-    toast.success('Cerraste sesión correctamente.');
-    setTimeout(() => redirect({
-      router, destination: '/login',
-    }));
-  };
-
-  return (
-    <AlertDialog.Root>
-      <AlertDialog.Trigger className={action}>
-        <p>Cerrar sesión</p>
-      </AlertDialog.Trigger>
-      <AlertDialog.Portal>
-        <AlertDialog.Overlay className={overlay} />
-        <AlertDialog.Content className={dialog}>
-          <AlertDialog.Title>
-            ¿Estás seguro/a?
-          </AlertDialog.Title>
-          <AlertDialog.Description>
-            Serás reenviado a la pantalla de inicio de sesión.
-          </AlertDialog.Description>
-
-          <div className={actions}>
-            <AlertDialog.Cancel asChild>
-              <Button variant="ghost">Cancelar</Button>
-            </AlertDialog.Cancel>
-            <AlertDialog.Action asChild>
-              <Button variant="caution" onClick={signOutAction}>Cerrar sesión</Button>
-            </AlertDialog.Action>
-          </div>
-
-        </AlertDialog.Content>
-      </AlertDialog.Portal>
-    </AlertDialog.Root>
-  );
-}
+import Link from 'next/link';
+import DialogComponent from './dialog';
 
 function AvatarIcon({ user }: { user: User }) {
   if (!user.profile) return null;
@@ -74,8 +30,17 @@ function AvatarIcon({ user }: { user: User }) {
 
 export default function AvatarComponent() {
   const { user } = useUser();
+  const router = useRouter();
 
   if (!user || !user.profile) return null;
+
+  const signOutAction = async () => {
+    client.authStore.clear();
+    toast.success('Cerraste sesión correctamente.');
+    redirect({
+      router, destination: '/login',
+    });
+  };
 
   return (
     <Popover.Root>
@@ -89,7 +54,15 @@ export default function AvatarComponent() {
             <p className={item}>Preferencias</p>
           </Link>
 
-          <CloseSession />
+          <DialogComponent
+            action={{
+              dispatch: signOutAction,
+              label: 'Cerrar sesión',
+            }}
+            title="¿Estás seguro/a?"
+            description="Serás redirigido a la pantalla de inicio de sesión."
+            label="Cerrar sesión"
+          />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

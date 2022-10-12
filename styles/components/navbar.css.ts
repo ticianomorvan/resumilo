@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { keyframes, style } from '@vanilla-extract/css';
 import vars from 'styles/theme.css';
 
 export const container = style({
@@ -14,11 +14,59 @@ export const container = style({
   backdropFilter: 'blur(20px)',
 });
 
-export const name = style({
-  fontSize: vars.text.md,
-});
-
 export const actions = style({
   display: 'flex',
   gap: vars.spacing.sm,
 });
+
+const showDropdown = keyframes({
+  '0%': {
+    opacity: 0,
+    top: '-20px',
+  },
+  '100%': {
+    opacity: 1,
+    top: '0',
+  },
+});
+
+export const dropdown = {
+  trigger: style({
+    display: 'flex',
+    fontSize: vars.text.md,
+    alignItems: 'center',
+    gap: vars.spacing.xs,
+    ':hover': {
+      cursor: 'pointer',
+    },
+  }),
+  caret: style({
+    fontSize: vars.text.xs,
+  }),
+  content: style({
+    backgroundColor: vars.color['primary-900'],
+    padding: vars.spacing.md,
+    zIndex: 140,
+    position: 'fixed',
+    translate: '-50%',
+    display: 'flex',
+    borderBottomLeftRadius: vars.rounded.md,
+    borderBottomRightRadius: vars.rounded.md,
+    flexDirection: 'column',
+    gap: vars.spacing.sm,
+    width: 'max-content',
+    animation: `${showDropdown} 0.25s`,
+  }),
+  itemSpan: style({
+    display: 'flex',
+    gap: vars.spacing.sm,
+    alignItems: 'center',
+    color: 'white',
+    textDecoration: 'none',
+    transition: 'translate 0.25s',
+    ':hover': {
+      translate: '5px',
+      cursor: 'pointer',
+    },
+  }),
+};

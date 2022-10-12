@@ -146,7 +146,13 @@ export default function Create() {
             && (
               <span className={documentStatus}>
                 <p>Documento:</p>
-                <b>{files.at(0)?.name}</b>
+                <b>
+                  {
+                    files.at(0)?.name.length! > 32
+                      ? `${files.at(0)?.name.slice(0, 32)}...`
+                      : files.at(0)?.name
+                  }
+                </b>
               </span>
             )}
 
