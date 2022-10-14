@@ -1,21 +1,29 @@
 import { globalStyle } from '@vanilla-extract/css';
 import vars from './theme.css';
 
+globalStyle(
+  'h1, h2, h3, h4, p, input, div, span, section, nav',
+  {
+    fontFamily: vars.fontFamily,
+  },
+);
+
 globalStyle('html', {
-  fontFamily: vars.fontFamily,
+  backgroundColor: vars.colors.gray3,
+});
+
+globalStyle('h1, h2, h3, h4', {
+  textAlign: 'center',
 });
 
 globalStyle('h1', {
   fontSize: vars.text.xl,
+  padding: vars.spacing.xs,
 });
 
 globalStyle('h2', {
   fontSize: vars.text.lg,
   fontWeight: 'normal',
-});
-
-globalStyle('p', {
-  fontFamily: vars.fontFamily,
 });
 
 globalStyle('input[type="file"]', {

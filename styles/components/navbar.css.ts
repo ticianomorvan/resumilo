@@ -12,6 +12,7 @@ export const container = style({
   boxShadow: '2px 2px 20px #0002',
   paddingInline: vars.spacing.md,
   backdropFilter: 'blur(20px)',
+
 });
 
 export const actions = style({
@@ -22,11 +23,11 @@ export const actions = style({
 const showDropdown = keyframes({
   '0%': {
     opacity: 0,
-    top: '-20px',
+    left: '-20px',
   },
   '100%': {
     opacity: 1,
-    top: '0',
+    left: '0',
   },
 });
 
@@ -48,7 +49,7 @@ export const dropdown = {
     padding: vars.spacing.md,
     zIndex: 140,
     position: 'fixed',
-    translate: '-50%',
+    translate: '-45%',
     display: 'flex',
     borderBottomLeftRadius: vars.rounded.md,
     borderBottomRightRadius: vars.rounded.md,

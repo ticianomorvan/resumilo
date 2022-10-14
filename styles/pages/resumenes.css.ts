@@ -3,13 +3,12 @@ import vars from 'styles/theme.css';
 
 // /resumenes/
 
-export const title = style({
-  textAlign: 'center',
-});
-
 export const summariesContainer = style({
   display: 'flex',
   flexDirection: 'column',
+  maxWidth: vars.size.xl,
+  margin: 'auto',
+  marginBlockEnd: vars.spacing.md,
   gap: vars.spacing.sm,
   paddingInline: vars.spacing.md,
   '@media': {

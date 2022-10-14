@@ -112,6 +112,19 @@ export const getSummaryById = async (id: string) => {
   }
 };
 
+export const searchSummaries = async (query: string) => {
+  try {
+    const records = await client.records.getFullList('summaries', 200, {
+      filter: `title~"${query}" || topic~"${query}"`,
+      sort: '-created',
+    }).then((summaries) => summaries.map((summary) => summary as SummaryRecord));
+
+    return records;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
 export const getSummaryDocument = (record: string, file: string) => `${process.env.NEXT_PUBLIC_POCKETBASE}/api/files/summaries/${record}/${file}`;
 
 export const getUserAvatar = (userId: string, file: string) => `${process.env.NEXT_PUBLIC_POCKETBASE}/api/files/systemprofiles0/${userId}/${file}`;

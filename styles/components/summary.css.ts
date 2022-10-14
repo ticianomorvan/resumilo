@@ -17,7 +17,7 @@ export const container = style({
   ':hover': {
     backgroundColor: vars.colors.primary.semitone,
     cursor: 'pointer',
-    scale: '1.05',
+    translate: '0 -5px',
   },
   '@media': {
     'screen and (min-width: 768px)': {
