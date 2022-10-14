@@ -99,16 +99,6 @@ export const getSerializedSummaries = async () => {
   }
 };
 
-export const getSummaryById = async (id: string) => {
-  try {
-    const record: SummaryRecord = await client.records.getOne('summaries', id) as SummaryRecord;
-
-    return JSON.stringify(record);
-  } catch (error: any) {
-    throw new Error(error);
-  }
-};
-
 export const searchSummaries = async (query: string) => {
   try {
     const records = await client.records.getFullList('summaries', 200, {

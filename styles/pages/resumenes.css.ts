@@ -24,6 +24,15 @@ export const summariesContainer = style({
 
 // /resumenes/[id]
 
+export const information = style({
+  display: 'flex',
+  maxWidth: vars.size.xl,
+  margin: 'auto',
+  textAlign: 'center',
+  justifyContent: 'space-around',
+  flexWrap: 'wrap',
+});
+
 export const downloadButton = style({
   display: 'flex',
   gap: vars.spacing.sm,

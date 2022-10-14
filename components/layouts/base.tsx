@@ -1,10 +1,8 @@
-import { ReactNode, Suspense } from 'react';
+import { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 import Head from 'next/head';
-import dynamic from 'next/dynamic';
 import { container, content } from 'styles/layouts/base.css';
-
-const Navbar = dynamic(() => import('../navbar'));
+import Navbar from 'components/navbar';
 
 interface Props {
   title: string;
@@ -26,9 +24,7 @@ function BaseLayout({ title, children }: Props) {
 
       <div className={container}>
         <Toaster />
-        <Suspense fallback="Loading...">
-          <Navbar />
-        </Suspense>
+        <Navbar />
         <main className={content}>{children}</main>
       </div>
     </>
