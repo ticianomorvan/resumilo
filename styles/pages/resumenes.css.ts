@@ -6,13 +6,14 @@ import vars from 'styles/theme.css';
 export const summariesContainer = style({
   display: 'flex',
   flexDirection: 'column',
-  maxWidth: vars.size.xl,
+  maxWidth: vars.size['2xl'],
   margin: 'auto',
   marginBlockEnd: vars.spacing.md,
   gap: vars.spacing.sm,
   paddingInline: vars.spacing.md,
   '@media': {
     'screen and (min-width: 425px)': {
+      maxWidth: vars.size.xl,
       flexDirection: 'row',
       flexWrap: 'wrap',
       gap: vars.spacing.sm,

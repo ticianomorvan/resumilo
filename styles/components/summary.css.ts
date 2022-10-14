@@ -31,6 +31,7 @@ export const information = style({
 });
 
 export const title = style({
+  color: vars.colors.gray2,
   fontSize: vars.text.md,
   fontWeight: 'bold',
 });
