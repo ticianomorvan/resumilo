@@ -51,6 +51,15 @@ export const authUser = async (email: string, password: string) => {
   }
 };
 
+export const getUserProfile = async (id: string) => {
+  try {
+    const record = await client.records.getOne('profiles', id);
+    return record;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
 export const updateUserProfile = async (id: string, data: UserProfile) => {
   const formData = new FormData();
   formData.append('name', data.name);
@@ -66,7 +75,7 @@ export const updateUserProfile = async (id: string, data: UserProfile) => {
 export const getUserById = async (id: string) => {
   try {
     const result = await client.users.getOne(id);
-    return JSON.stringify(result);
+    return result;
   } catch (error: any) {
     throw new Error(error);
   }
@@ -92,21 +101,9 @@ export const getSerializedSummaries = async () => {
 
 export const getSummaryById = async (id: string) => {
   try {
-    const {
-      id: recordId, title, description, topic, date, document, author,
-    } = await client.records.getOne('summaries', id) as SummaryRecord;
+    const record: SummaryRecord = await client.records.getOne('summaries', id) as SummaryRecord;
 
-    const data: Summary = {
-      id: recordId,
-      title,
-      description,
-      topic,
-      date,
-      document,
-      author,
-    };
-
-    return data;
+    return JSON.stringify(record);
   } catch (error: any) {
     throw new Error(error);
   }
