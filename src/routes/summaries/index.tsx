@@ -1,35 +1,37 @@
-import { component$, useClientEffect$, useStore } from "@builder.io/qwik";
-import { Summary } from "~/types/summary";
 import Pocketbase from "pocketbase"
+import { component$, Resource } from "@builder.io/qwik";
+import { RequestHandler, useEndpoint } from "@builder.io/qwik-city";
+import { convertToSummary } from "~/lib/utils";
+import { Summary } from "~/types/summary";
+import { SummaryCard } from "~/components/summary_card";
 
-interface Data {
-  id: string,
-  title: string,
-  description: string,
-  content: string,
-}
+export const onGet: RequestHandler<Summary[]> = async () => {
+  const client = new Pocketbase(import.meta.env.VITE_POCKETBASE)
+
+  const records = await client.records.getFullList('summaries', 200, {
+    sort: '-created'
+  })
+
+  const data = records.map((record) => convertToSummary(record))
+
+  return data
+};
 
 export default component$(() => {
-  const state = useStore<{ summaries: Data[] }>({
-    summaries: []
-  })
-
-  useClientEffect$(() => {
-    const client = new Pocketbase(import.meta.env.VITE_POCKETBASE)
-
-    client.records.getFullList('summaries', 200)
-      .then((records) => records.map((record) => {
-        return {
-          title: record.title,
-          description: record.description,
-          content: record.content,
-          id: record.id
-        }
-      }))
-      .then((summaries) => state.summaries = summaries)
-  })
+  const summaries = useEndpoint<Summary[]>()
 
   return (
-    <p>{state.summaries.map((summary) => summary.title)}</p>
+    <Resource
+      value={summaries}
+      onResolved={(summaries) => (
+        <>
+          {summaries.map((summary) => (
+            <SummaryCard
+              data={summary}
+            />
+          ))}
+        </>
+      )}
+    />
   )
 })

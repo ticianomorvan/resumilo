@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
-import styles from "./navbar.module.css"
+import styles from "~/styles/components/navbar.module.css"
 
-export default component$(() => {
+export const Navbar = component$(() => {
   return (
     <header className={styles.container}>
       <nav>
