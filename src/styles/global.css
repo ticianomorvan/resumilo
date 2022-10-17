@@ -1,8 +1,12 @@
 @import "sanitize.css";
+@import "sanitize.css/typography.css";
 @import "sanitize.css/forms.css";
 @import "@fontsource/inter";
 
 .body {
   font-family: "Inter";
-  background-color: #222;
+}
+
+.p {
+  font-size: 48em;
 }
