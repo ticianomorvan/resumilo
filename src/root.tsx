@@ -1,8 +1,9 @@
 import { component$ } from '@builder.io/qwik';
 import { QwikCity, RouterOutlet, ServiceWorkerRegister } from '@builder.io/qwik-city';
-import { RouterHead } from './components/router-head/router-head';
-import Navbar from './components/navbar/navbar';
+import { RouterHead } from './components/router_head';
+import Navbar from './components/navbar';
 
+import './styles/variables.css'
 import './global.css';
 
 export default component$(() => {

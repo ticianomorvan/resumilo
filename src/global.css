@@ -1,9 +1,19 @@
+/* Sanitize */
 @import "sanitize.css";
 @import "sanitize.css/typography.css";
 @import "sanitize.css/forms.css";
+
+/* Fonts */
 @import "@fontsource/inter";
+
+/* Colors */
+@import "@radix-ui/colors/gray.css";
 
 body {
   font-family: 'Inter';
   user-select: none;
+}
+
+h1 {
+  font-size: var(--text-xl);
 }

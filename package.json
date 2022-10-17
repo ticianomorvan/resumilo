@@ -36,6 +36,8 @@
   },
   "dependencies": {
     "@fontsource/inter": "^4.5.14",
+    "@radix-ui/colors": "^0.1.8",
+    "dayjs": "^1.11.5",
     "pocketbase": "^0.7.4",
     "sanitize.css": "^13.0.0"
   }
