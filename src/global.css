@@ -6,13 +6,39 @@
 @tailwind utilities;
 
 h1 {
-  @apply text-4xl my-6 px-4 font-bold;
+  @apply text-4xl my-6 font-bold;
 }
 
-button {
-  @apply p-2 border-[1px] border-black transition-colors duration-150;
+h2 {
+  @apply text-3xl my-4 font-bold;
 }
 
-button:hover {
-  @apply bg-gray-100;
+h1, h2, h3, h4 {
+  @apply text-center md:text-start
+}
+
+#create {
+  @apply p-2 bg-black text-white transition-colors duration-150 hover:bg-zinc-800;
+}
+
+label {
+  @apply flex flex-col gap-4 my-4;
+}
+
+label input {
+  @apply border-[1px] border-black focus:outline-none;
+}
+
+/* Tiptap styles */
+
+.ProseMirror p.is-empty {
+  @apply first:before:content-[attr(data-placeholder)] text-gray-500;
+}
+
+.toolbar {
+  @apply flex flex-wrap justify-center gap-1;
+}
+
+.toolbar button {
+  @apply p-3 border-[1px] border-black transition-colors duration-150 hover:bg-gray-100;
 }

@@ -10,9 +10,10 @@ export default component$(() => {
     <QwikCity>
       <head>
         <meta charSet="utf-8" />
+        <script src={import.meta.env.VITE_FONTAWESOME} crossOrigin="anonymous" />
         <RouterHead />
       </head>
-      <body class="font-sans" lang="es">
+      <body class="container m-auto font-sans" lang="es">
         <Navbar />
         <RouterOutlet />
         <ServiceWorkerRegister />
