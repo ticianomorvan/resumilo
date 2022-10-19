@@ -1,6 +1,6 @@
 import { DocumentHead, Link } from '@builder.io/qwik-city';
 import { component$, useStyles$ } from '@builder.io/qwik';
-import styles from "~/styles/index.css"
+import styles from "~/styles/pages/index.css"
 
 export default component$(() => {
   useStyles$(styles);

@@ -4,7 +4,7 @@ import { DocumentHead, RequestHandler, useEndpoint } from "@builder.io/qwik-city
 import { Summary } from "~/types/summary";
 import { convertToSummary } from "~/lib/utils";
 import { SummaryCard } from "~/components/summary_card";
-import styles from "~/styles/summaries.css"
+import styles from "~/styles/pages/summaries.css"
 
 export const onGet: RequestHandler<Summary[]> = async () => {
   const client = new Pocketbase(import.meta.env.VITE_POCKETBASE)

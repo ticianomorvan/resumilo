@@ -25,6 +25,7 @@ export const convertToSummary = (record: Record) => {
     description: record.description,
     content: record.content,
     created: record.created,
+    author: record.author,
   } as Summary
 }
 
@@ -35,6 +36,6 @@ export const convertToSummary = (record: Record) => {
  * @returns a localized string of the relative time.
  */
 export const getTimeFromCreation = (date: string) => {
-  const timeDistance = dayjs().from(dayjs(date))
+  const timeDistance = dayjs().format('DD/MM/YYYY')
   return timeDistance
 }
