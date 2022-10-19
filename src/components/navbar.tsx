@@ -1,13 +1,10 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
-import styles from "~/styles/components/navbar.css"
+import { component$ } from "@builder.io/qwik";
 
-export default component$(() => {
-  useStyles$(styles)
-
+export const Navbar = component$(() => {
   return (
-    <header>
+    <header class="w-full top-0 flex sticky justify-between bg-white/80 backdrop-blur-md p-4">
       <nav>
-        <p id="name">Resumilo</p>
+        <p class="text-xl">Resumilo</p>
       </nav>
     </header>
   )

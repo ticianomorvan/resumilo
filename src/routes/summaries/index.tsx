@@ -1,10 +1,9 @@
 import Pocketbase from "pocketbase"
-import { component$, Resource, useStyles$ } from "@builder.io/qwik";
+import { component$, Resource } from "@builder.io/qwik";
 import { DocumentHead, RequestHandler, useEndpoint } from "@builder.io/qwik-city";
 import { Summary } from "~/types/summary";
 import { convertToSummary } from "~/lib/utils";
 import { SummaryCard } from "~/components/summary_card";
-import styles from "~/styles/pages/summaries.css"
 
 export const onGet: RequestHandler<Summary[]> = async () => {
   const client = new Pocketbase(import.meta.env.VITE_POCKETBASE)
@@ -18,7 +17,6 @@ export const onGet: RequestHandler<Summary[]> = async () => {
 
 export default component$(() => {
   const data = useEndpoint<Summary[]>()
-  useStyles$(styles)
 
   return (
     <Resource
@@ -27,7 +25,7 @@ export default component$(() => {
       onRejected={() => <p>Hubo un error.</p>}
       onResolved={(summaries) => (
         <>
-          <h1>Mirá los últimos resúmenes.</h1>
+          <h1 class="text-center">Mirá los últimos resúmenes.</h1>
           <section>
             {summaries.map((summary) => <SummaryCard data={summary} />)}
           </section>
